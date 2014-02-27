@@ -39,7 +39,7 @@ public class WorkerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			response.getWriter().write("columbia university");
+			response.getWriter().write("columbia university: yes");
 			// Signal to beanstalk that processing was successful so this work
 			// item should not be retried.
 
