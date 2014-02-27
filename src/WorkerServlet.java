@@ -39,10 +39,13 @@ public class WorkerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			response.getWriter().write("columbia university: yes");
+			//response.getWriter().write("columbia university: yes");
 			// Signal to beanstalk that processing was successful so this work
 			// item should not be retried.
+			//request.getRequestDispatcher("jsp/Index.jsp").forward(request, response);
 
+			response.sendRedirect("Index.jsp");
+			
 			response.setStatus(200);
 		} catch (RuntimeException  exception) {
 

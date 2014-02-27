@@ -38,10 +38,10 @@ public class ConversationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			response.getWriter().write("university");
+			//response.getWriter().write("university");
 			// Signal to beanstalk that processing was successful so this work
 			// item should not be retried.
-
+			request.getRequestDispatcher("Conversation.jsp").forward(request, response);
 			response.setStatus(200);
 		} catch (RuntimeException  exception) {
 
