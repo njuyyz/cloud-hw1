@@ -14,7 +14,6 @@ import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
-
 public class ConversationServlet extends HttpServlet {
 
 	/**
