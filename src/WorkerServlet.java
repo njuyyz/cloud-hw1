@@ -1,13 +1,16 @@
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import model.Conversation;
+import model.Video;
 
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
@@ -35,19 +38,37 @@ public class WorkerServlet extends HttpServlet {
 					new InstanceProfileCredentialsProvider(),
 					new ClasspathPropertiesFileCredentialsProvider()));
 
+	private ArrayList<Conversation> retreiveConversations() {
+		ArrayList<Conversation> list = new ArrayList<Conversation>();
+		for (int i = 0; i < 7; i++) {
+			Conversation c = new Conversation();
+			c.setConversationId("conversation 1");
+			ArrayList<Video> videoList = new ArrayList<Video>();
+			Video v = new Video();
+			v.setconversationId("conversation 1");
+			v.setUrl("https://s3.amazonaws.com/allen.ryan.bucket.1/sample_mpeg4.mp4");
+			v.setVideoName("My Video");
+			videoList.add(v);
+			c.setVideoList(videoList);
+			list.add(c);
+		}
+		return list;
+	}
+
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			//response.getWriter().write("columbia university: yes");
+			// response.getWriter().write("columbia university: yes");
 			// Signal to beanstalk that processing was successful so this work
 			// item should not be retried.
-			//request.getRequestDispatcher("jsp/Index.jsp").forward(request, response);
+			ArrayList<Conversation> conList = retreiveConversations();
+			request.setAttribute("conversationList", conList);
+			request.getRequestDispatcher("Index.jsp")
+					.forward(request, response);
 
-			response.sendRedirect("Index.jsp");
-			
 			response.setStatus(200);
-		} catch (RuntimeException  exception) {
+		} catch (RuntimeException exception) {
 
 			// Signal to beanstalk that something went wrong while processing
 			// the request. The work request will be retried several times in
@@ -71,43 +92,7 @@ public class WorkerServlet extends HttpServlet {
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-
-		try {
-
-			// Parse the work to be done from the POST request body.
-
-			WorkRequest workRequest = WorkRequest.fromJson(request
-					.getInputStream());
-
-			// Simulate doing some work.
-
-			Thread.sleep(10 * 1000);
-
-			// Write the "result" of the work into Amazon S3.
-
-			byte[] message = workRequest.getMessage().getBytes(UTF_8);
-
-			s3.putObject(workRequest.getBucket(), workRequest.getKey(),
-					new ByteArrayInputStream(message), new ObjectMetadata());
-
-			// Signal to beanstalk that processing was successful so this work
-			// item should not be retried.
-
-			response.setStatus(200);
-
-		} catch (RuntimeException | InterruptedException exception) {
-
-			// Signal to beanstalk that something went wrong while processing
-			// the request. The work request will be retried several times in
-			// case the failure was transient (eg a temporary network issue
-			// when writing to Amazon S3).
-
-			response.setStatus(500);
-			try (PrintWriter writer = new PrintWriter(
-					response.getOutputStream())) {
-				exception.printStackTrace(writer);
-			}
-		}
+		doGet(request,response);
 	}
 
 }

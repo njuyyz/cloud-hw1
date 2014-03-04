@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Conversation {
 
 	private ArrayList<Video> videoList;
-	private String converstationId;
+	private String conversationId;
 	
 	public ArrayList<Video> getVideoList() {
 		return videoList;
@@ -15,12 +15,12 @@ public class Conversation {
 		this.videoList = videoList;
 	}
 
-	public String getConverstationId() {
-		return converstationId;
+	public String getConversationId() {
+		return conversationId;
 	}
 
-	public void setConverstationId(String converstationId) {
-		this.converstationId = converstationId;
+	public void setConversationId(String converstationId) {
+		this.conversationId = converstationId;
 	}
 
 	public Conversation(){
