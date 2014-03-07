@@ -41,6 +41,7 @@ public class ConnectDB {
 		Class.forName(driver).newInstance();
 		connection =  DriverManager.getConnection(url + dbName, username, password);
 		//Statement st = connection.createStatement();
+		System.out.println(connection.getCatalog());
 		
 	}	
 	
@@ -104,6 +105,7 @@ public class ConnectDB {
 		
 		System.out.println("fuck");
 		ConnectDB db = new ConnectDB();
+		
 	}
 }
 
