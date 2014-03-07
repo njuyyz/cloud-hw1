@@ -71,20 +71,9 @@ public class ConversationServlet extends HttpServlet {
 
 			// Parse the work to be done from the POST request body.
 
-			WorkRequest workRequest = WorkRequest.fromJson(request
-					.getInputStream());
-
 			// Simulate doing some work.
 
 			Thread.sleep(10 * 1000);
-
-			// Write the "result" of the work into Amazon S3.
-
-			byte[] message = workRequest.getMessage().getBytes(UTF_8);
-
-			s3.putObject(workRequest.getBucket(), workRequest.getKey(),
-					new ByteArrayInputStream(message), new ObjectMetadata());
-
 			// Signal to beanstalk that processing was successful so this work
 			// item should not be retried.
 

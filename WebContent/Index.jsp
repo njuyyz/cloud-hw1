@@ -77,7 +77,7 @@ div.upload input {
 <body>
 	<%
 		if (request.getAttribute("UploadStatus") != null) {
-		String status = (String) request.getAttribute("UploadStatus");
+			String status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
 		<span><%=status%></span>
@@ -120,10 +120,23 @@ div.upload input {
 											function(response) {
 												// Here we specify what we do with the response anytime this event occurs. 
 												if (response.status === 'connected') {
-													document.getElementById("cameraInput").disabled = false;
-													document.getElementById("dc").disabled = false;
-													document.getElementById("dc").style.background="url(new_conversation_btn.png)";
-													document.getElementById("dc").style.backgroundSize="200px 50px";
+													document
+															.getElementById("cameraInput").disabled = false;
+													document
+															.getElementById("dc").disabled = false;
+													document
+															.getElementById("dc").style.background = "url(new_conversation_btn.png)";
+													document
+															.getElementById("dc").style.backgroundSize = "200px 50px";
+													FB
+															.api(
+																	'/me',
+																	function(
+																			response) {
+
+																		document
+																				.getElementById('inputUserId').value = response.id;
+																	});
 												} else if (response.status === 'not_authorized') {
 													// In this case, the person is logged into Facebook, but not into the app, so we call
 													// FB.login() to prompt them to do so. 
@@ -132,21 +145,29 @@ div.upload input {
 													// (1) JavaScript created popup windows are blocked by most browsers unless they 
 													// result from direct interaction from people using the app (such as a mouse click)
 													// (2) it is a bad experience to be continually prompted to login upon page load.
-													document.getElementById("cameraInput").disabled = true;
-													document.getElementById("dc").disabled = true;
-													document.getElementById("dc").style.background="url(new_conversation_btn_false.png)";
-													document.getElementById("dc").style.backgroundSize="200px 50px";
-												
+													document
+															.getElementById("cameraInput").disabled = true;
+													document
+															.getElementById("dc").disabled = true;
+													document
+															.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+													document
+															.getElementById("dc").style.backgroundSize = "200px 50px";
+
 												} else {
 													// In this case, the person is not logged into Facebook, so we call the login() 
 													// function to prompt them to do so. Note that at this stage there is no indication
 													// of whether they are logged into the app. If they aren't then they'll see the Login
 													// dialog right after they log in to Facebook. 
 													// The same caveats as above apply to the FB.login() call here.
-													document.getElementById("cameraInput").disabled = true;
-													document.getElementById("dc").disabled = true;
-													document.getElementById("dc").style.background="url(new_conversation_btn_false.png)";
-													document.getElementById("dc").style.backgroundSize="200px 50px";
+													document
+															.getElementById("cameraInput").disabled = true;
+													document
+															.getElementById("dc").disabled = true;
+													document
+															.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+													document
+															.getElementById("dc").style.backgroundSize = "200px 50px";
 												}
 											});
 						};
@@ -185,7 +206,8 @@ div.upload input {
 					<input type="file" capture="camera" accept="video/*"
 						id="cameraInput" name="upload" />
 				</div>
-				<input type="submit" value="Upload" />
+				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
+					type="submit" value="Upload" />
 			</form>
 
 		</div>

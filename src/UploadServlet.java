@@ -28,7 +28,7 @@ public class UploadServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static String bucket = "elasticbeanstalk-us-east-1-524298820271";
+	private static String bucket = "allen.ryan.bucket.1";
 
 	/**
 	 * A client to use to access Amazon S3. Pulls credentials from the
@@ -53,14 +53,17 @@ public class UploadServlet extends HttpServlet {
 			List<FileItem> items = new ServletFileUpload(
 					new DiskFileItemFactory()).parseRequest(request);
 			
-			if (items.size() == 1) {
+			if (items.size() == 2) {
+				String userId = items.get(1).getString();
+				
 				InputStream is = items.get(0).getInputStream();
 				String key = "" + System.currentTimeMillis() + request.getRemoteAddr() + items.get(0).getName();
 				s3.putObject(new PutObjectRequest(getBucket(), key, is, new ObjectMetadata()));
 
-				request.setAttribute("UploadStatus", "Upload Success");
+				request.setAttribute("UploadStatus", "Upload Success:"+ userId);
+			}else{
+				request.setAttribute("UploadStatus", ""+items.size());
 			}
-			request.setAttribute("UploadStatus", "Upload Failed");
 			request.getRequestDispatcher("index.html").forward(request, response);
 
 		} catch (FileUploadException e) {
