@@ -77,7 +77,7 @@ div.upload input {
 <body>
 	<%
 		if (request.getAttribute("UploadStatus") != null) {
-			String status = (String) request.getAttribute("UploadStatus");
+		String status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
 		<span><%=status%></span>
@@ -86,6 +86,31 @@ div.upload input {
 		}
 	%>
 	<!-- Main jumbotron for a primary marketing message or call to action -->
+
+
+	<script async src="https://connect.facebook.net/en_US/all.js" >
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : 382097358596865,
+				status : true,
+				xfbml : true
+			});
+		};
+
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {
+				return;
+			}
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+	<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+	<div id="fb-root"></div>
+	
 	<div class="jumbotron">
 		<div class="container">
 			<h1>Welcome</h1>
