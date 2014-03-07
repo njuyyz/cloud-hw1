@@ -52,12 +52,14 @@ public class UploadServlet extends HttpServlet {
 
 			List<FileItem> items = new ServletFileUpload(
 					new DiskFileItemFactory()).parseRequest(request);
+			
 			if (items.size() == 1) {
 				InputStream is = items.get(0).getInputStream();
-				String key = ""+System.currentTimeMillis()+request.getRemoteAddr()+items.get(0).getName();
+				String key = "" + System.currentTimeMillis() + request.getRemoteAddr() + items.get(0).getName();
 				s3.putObject(new PutObjectRequest(getBucket(), key, is, new ObjectMetadata()));
-
+				
 			}
+			
 			request.setAttribute("UploadStatus", "Upload Success");
 			request.getRequestDispatcher("index.html").forward(request, response);
 

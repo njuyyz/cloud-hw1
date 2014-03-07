@@ -77,7 +77,7 @@
 			<div class="col-md-4">
 				<h2>Video</h2>
 				<video width="320" height="240" controls> 
-				<source src="https://s3.amazonaws.com/allen.ryan.bucket.1/sample_mpeg4.mp4" type="video/mp4">
+				<source src="http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4" type="video/mp4">
 				</video>
 			</div>
 			<div class="col-md-4">

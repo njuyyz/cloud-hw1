@@ -7,6 +7,7 @@ public class Conversation {
 	private ArrayList<Video> videoList;
 	private long conversationId;
 	
+	
 	public ArrayList<Video> getVideoList() {
 		return videoList;
 	}
@@ -21,10 +22,6 @@ public class Conversation {
 
 	public void setConversationId(long converstationId) {
 		this.conversationId = converstationId;
-	}
-
-	public Conversation(){
-		
 	}
 	
 	public boolean addVideo(Video v){

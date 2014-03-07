@@ -27,6 +27,7 @@ public class WorkerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
+	
 	/**
 	 * A client to use to access Amazon S3. Pulls credentials from the
 	 * {@code AwsCredentials.properties} file if found on the classpath,
@@ -42,12 +43,14 @@ public class WorkerServlet extends HttpServlet {
 		ArrayList<Conversation> list = new ArrayList<Conversation>();
 		for (int i = 0; i < 7; i++) {
 			Conversation c = new Conversation();
-			c.setConversationId("conversation 1");
+			c.setConversationId(i + 1l);
+			
 			ArrayList<Video> videoList = new ArrayList<Video>();
 			Video v = new Video();
-			v.setconversationId("conversation 1");
-			v.setUrl("https://s3.amazonaws.com/allen.ryan.bucket.1/sample_mpeg4.mp4");
+			v.setConversationId(1L);
+			v.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
 			v.setVideoName("My Video");
+			
 			videoList.add(v);
 			c.setVideoList(videoList);
 			list.add(c);

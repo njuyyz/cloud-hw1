@@ -4,14 +4,14 @@ public class Video {
 
 	private String url;
 	private String videoName;
-	private String conversationId;
+	private long conversationId;
 	private long videoTimestamp;
 	private String username;
 	
-	public String getConversationId() {
+	public long getConversationId() {
 		return conversationId;
 	}
-	public void setConversationId(String conversationId) {
+	public void setConversationId(long conversationId) {
 		this.conversationId = conversationId;
 	}
 	public long getVideoTimestamp() {

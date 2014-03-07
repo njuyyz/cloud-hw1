@@ -14,32 +14,45 @@ import java.util.Date;
 public class ConnectDB {
 	static private Connection connection = null;
 	static private Statement statement = null;
-	private final static String tableName = "videoTable";
 	
-	private final static String videoName = "name";
-	private final static String videoRating = "rating";
-	private final static String videoNumOfRating = "count";
-	private final static String videoTimestamp = "time";
-	private final static String uploaduser = "user";
+	private static String tableName = "cloudTable";
 	
-	public ConnectDB() throws Exception{
+	// for the video class
+	private static String videoName = "name";
+	private static String uploaduser = "user";
+	private static long videoTimestamp = System.currentTimeMillis();
+	private long conversationId = 1l;
+	private String url;
+	
+	static String unicode = "?useUnicode=yes&characterEncoding=UTF-8";
+	
+	public ConnectDB() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+			
+//		String url = "jdbc:mysql://mydb.co9r6pzgikbx.us-east-1.rds.amazonaws.com:3306/employees?user=awsuser&password=mypassword";
+	
 		String url = "jdbc:mysql://mydbinstance.co9r6pzgikbx.us-east-1.rds.amazonaws.com:3306/";
-		String dbName = "mydbinstance";
+
+		String dbName = "mydb";
 		String username = "awsuser";
 		String password = "mypassword"; 
 
+		String driver = "com.mysql.jdbc.Driver";
+
+		Class.forName(driver).newInstance();
 		connection =  DriverManager.getConnection(url + dbName, username, password);
-		statement =  connection.createStatement();
+		//Statement st = connection.createStatement();
+		
 	}	
-	
 	
 	public void createTable() throws SQLException	{
 		statement.execute("DROP TABLE IF EXISTS " + tableName);
 		
 		System.out.println("Create a new table: " + tableName);
 		
-		statement.execute("create table " + tableName + " (" + videoName + " varchar(32), " + videoRating
-			+ " float, " + videoNumOfRating + " int, time varchar(32), "+ uploaduser + " varchar(32))");
+		// I chose int for JAVA's (long)!!!
+		statement.execute("create table " + tableName + " (" + videoName + " varchar(32), " + conversationId
+			+ " int, " + videoTimestamp + " int, url varchar(100), "+ uploaduser + " varchar(32))");
+		
 		System.out.println("Table created successfully");
 	}
 	
@@ -89,16 +102,19 @@ public class ConnectDB {
 	
 	public static void main(String[] args) throws Exception{
 		
+		System.out.println("fuck");
 		ConnectDB db = new ConnectDB();
-		db.createTable();
-		
-		new ConnectDB().insert();
-		
-		ArrayList<String> a = new ArrayList<String>();
-		new ConnectDB().query(a) ;
-		
-		//new ControlRDS().deleteRecord("ke_976238.mp4");
-		System.out.println(a.size());
+//		db.createTable();
+//		
+//		System.out.println("fuck");
+//		
+//		new ConnectDB().insert();
+//		
+//		ArrayList<String> a = new ArrayList<String>();
+//		new ConnectDB().query(a) ;
+//		
+//		//new ControlRDS().deleteRecord("????.mp4");
+//		System.out.println(a.size());
 	}
 }
 
