@@ -104,17 +104,6 @@ public class ConnectDB {
 		
 		System.out.println("fuck");
 		ConnectDB db = new ConnectDB();
-//		db.createTable();
-//		
-//		System.out.println("fuck");
-//		
-//		new ConnectDB().insert();
-//		
-//		ArrayList<String> a = new ArrayList<String>();
-//		new ConnectDB().query(a) ;
-//		
-//		//new ControlRDS().deleteRecord("????.mp4");
-//		System.out.println(a.size());
 	}
 }
 
