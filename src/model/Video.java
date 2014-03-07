@@ -8,6 +8,18 @@ public class Video {
 	private long videoTimestamp;
 	private String username;
 	
+	public Video()	{
+		
+	}
+	
+	public Video(String url, String videoName, long conversationId, long videoTimeStamp, String username)	{
+		this.url = url;
+		this.videoName = videoName;
+		this.conversationId = conversationId;
+		this.videoTimestamp = videoTimeStamp;
+		this.username = username;
+	}
+	
 	public long getConversationId() {
 		return conversationId;
 	}
