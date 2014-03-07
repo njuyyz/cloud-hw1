@@ -51,6 +51,7 @@ public class WorkerServlet extends HttpServlet {
 			v.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
 			v.setVideoName("My Video");
 			
+			
 			videoList.add(v);
 			c.setVideoList(videoList);
 			list.add(c);

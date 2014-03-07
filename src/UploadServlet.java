@@ -57,10 +57,10 @@ public class UploadServlet extends HttpServlet {
 				InputStream is = items.get(0).getInputStream();
 				String key = "" + System.currentTimeMillis() + request.getRemoteAddr() + items.get(0).getName();
 				s3.putObject(new PutObjectRequest(getBucket(), key, is, new ObjectMetadata()));
-				
+
+				request.setAttribute("UploadStatus", "Upload Success");
 			}
-			
-			request.setAttribute("UploadStatus", "Upload Success");
+			request.setAttribute("UploadStatus", "Upload Failed");
 			request.getRequestDispatcher("index.html").forward(request, response);
 
 		} catch (FileUploadException e) {
