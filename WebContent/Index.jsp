@@ -77,7 +77,7 @@ div.upload input {
 <body>
 	<%
 		if (request.getAttribute("UploadStatus") != null) {
-		String status = (String) request.getAttribute("UploadStatus");
+			String status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
 		<span><%=status%></span>
@@ -85,32 +85,52 @@ div.upload input {
 	<%
 		}
 	%>
+
+	<div class="navbar" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<!-- 				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button> -->
+				<a class="navbar-brand" href="#">Twitt-Tube</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<div class="navbar-form navbar-right">
+					<div id="fb-root"></div>
+					<script>
+						window.fbAsyncInit = function() {
+							FB.init({
+								appId : 382097358596865,
+								status : true,
+								xfbml : true
+							});
+						};
+
+						(function(d, s, id) {
+							var js, fjs = d.getElementsByTagName(s)[0];
+							if (d.getElementById(id)) {
+								return;
+							}
+							js = d.createElement(s);
+							js.id = id;
+							js.src = "//connect.facebook.net/en_US/all.js";
+							fjs.parentNode.insertBefore(js, fjs);
+						}(document, 'script', 'facebook-jssdk'));
+					</script>
+					<div class="fb-login-button" data-max-rows="2" data-size="medium"
+						data-show-faces="true" data-auto-logout-link="true"></div>
+				</div>
+
+			</div>
+			<!--/.navbar-collapse -->
+		</div>
+	</div>
+
+
 	<!-- Main jumbotron for a primary marketing message or call to action -->
-
-
-	<script async src="https://connect.facebook.net/en_US/all.js" >
-		window.fbAsyncInit = function() {
-			FB.init({
-				appId : 382097358596865,
-				status : true,
-				xfbml : true
-			});
-		};
-
-		(function(d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) {
-				return;
-			}
-			js = d.createElement(s);
-			js.id = id;
-			js.src = "//connect.facebook.net/en_US/all.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	</script>
-	<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
-	<div id="fb-root"></div>
-	
 	<div class="jumbotron">
 		<div class="container">
 			<h1>Welcome</h1>
@@ -125,7 +145,6 @@ div.upload input {
 
 		</div>
 	</div>
-
 
 
 	<div class="container">
