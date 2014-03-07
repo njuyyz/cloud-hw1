@@ -70,19 +70,21 @@ public class ConnectDB {
 		System.out.println("Insert created successfully");
 	}
 
-	public void query(ArrayList<String> a) throws Exception {
+	// print all videos' names
+	public void query(ArrayList<Long> a) throws Exception {
 
 		ResultSet rs = statement
 				.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable order by videoTimestamp desc");
 
 		while (rs.next()) {
 			// System.out.println(rs.getString(username));
-			a.add(rs.getString(username));
+			System.out.print(rs.getLong(conversationId));
+			System.out.println(" "+rs.getString(username));
 		}
-
-		for (String s : a) {
-			System.out.println(s);
-		}
+//
+//		for (long s : a) {
+//			System.out.println(s);
+//		}
 
 		// close all the stuff
 		rs.close();
@@ -97,12 +99,21 @@ public class ConnectDB {
 
 	}
 
+	public void addVideo(Video v) throws SQLException {
 
+		String url = v.getUrl();
+		String videoName = v.getVideoName();
+		long conversationId = v.getConversationId();
+		long videoTimestamp = v.getVideoTimestamp();
+		String username = v.getUsername();
+
+		statement.executeUpdate("insert into cloudTable values ('" + videoName
+				+ "', " + conversationId + ", " + videoTimestamp + ", '" + url
+				+ "', '" + username + "')");
+	}
 
 	public Video getVideo(String URL) throws SQLException {
 		Video v = new Video();
-
-		System.out.println("***********");
 		
 		ResultSet rs = statement
 				.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable where url = '"
@@ -112,39 +123,46 @@ public class ConnectDB {
 	
 			// System.out.println(rel.getString("name"));
 				
-			v.setConversationId(rs.getLong(conversationId));
-			
-			
+			v.setConversationId(rs.getLong(conversationId));		
 			v.setVideoTimestamp(rs.getLong(videoTimestamp));
-			
-			
+					
 			v.setUrl(rs.getString(url));
 			v.setVideoName(rs.getString(videoName));
-			v.setUsername(rs.getString(username));
-			
+			v.setUsername(rs.getString(username));	
+			System.out.println(rs.getString(username)+" "+rs.getLong(conversationId));
 		}
-
-		System.out.println("***********");
+		rs.close();
+		
 		return v;
 	}
 
-	public void addVideo(Video v) throws SQLException {
 
-		String url = v.getUrl();
-		String videoName = v.getVideoName();
-		long conversationId = v.getConversationId();
-		long videoTimestamp = v.getVideoTimestamp();
-		String username = v.getUsername();
 
+	public Conversation getConversation(long id) throws SQLException {
+		
+		Conversation c = new Conversation();
+		
+		ArrayList<String> urlList = new ArrayList<String>();	
+		ResultSet rs = statement
+				.executeQuery("select url, conversationId from cloudTable where conversationId = '"
+						+ id + "'");
 
 		
-		statement.executeUpdate("insert into cloudTable values ('" + videoName
-				+ "', " + conversationId + ", " + videoTimestamp + ", '" + url
-				+ "', '" + username + "')");
-	}
-
-	public Conversation getConversation(long conversationId) {
-		return null;
+		while (rs.next()) {
+			urlList.add(rs.getString(url));	
+		}
+		rs.close();
+		System.out.println("urlList size:" + urlList.size());
+		ArrayList<Video> videoList = new ArrayList<Video>();
+		for(int i = 0; i < urlList.size(); i++)	{
+			videoList.add(getVideo(urlList.get(i)));
+		}
+		
+		
+		c.setVideoList(videoList);
+		c.setConversationId(id);
+	
+		return c;
 	}
 
 	public ArrayList<Conversation> getAllConversation() {
@@ -152,7 +170,7 @@ public class ConnectDB {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Video video = new Video("url1", "test1", 1l, System.currentTimeMillis(), "Allen");
+		Video video = new Video("url1", "test1.mp4", 1l, System.currentTimeMillis(), "Allen");
 			
 		Video video2;
 		
@@ -162,18 +180,31 @@ public class ConnectDB {
 		db.addVideo(video);
 		db.insert();
 
-		ArrayList<String> a = new ArrayList<String>();
+		ArrayList<Long> a = new ArrayList<Long>();
 
 		video2 = db.getVideo("url1");
 		
 		System.out.println("*****");
-		System.out.println("this is video getting from the DB:");
-		System.out.println(video2.getUsername());
-		System.out.println(video2.getVideoTimestamp());
-		System.out.println(video2.getUrl());
-		System.out.println("*****");
-				
-		db.query(a); // disconnect
+		System.out.println("this is Conversation 1:");
+	
+		Conversation c = db.getConversation(1);
+		ArrayList<Video> arr = c.getVideoList();
+		
+		System.out.println(arr.get(0).getUsername());	// Allen
+		System.out.println(arr.get(1).getUsername());	// Ben
+		
+		
+		System.out.println("this is Conversation 2:");
+		
+		c = db.getConversation(2);
+		ArrayList<Video> arr2 = c.getVideoList();	
+		System.out.println(arr2.get(0).getUsername());
+		
+		
+		System.out.println("******");
+		
+		
+		db.query(a); 			// disconnect
 		// new ControlRDS().deleteRecord("sample.mp4");
 		System.out.println(a.size());
 		
