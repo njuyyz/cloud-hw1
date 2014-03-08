@@ -204,7 +204,7 @@ div.upload input {
 			<form action="upload" method="post" enctype="multipart/form-data">
 				<div class="upload" id="dc">
 					<input type="file" capture="camera" accept="video/*"
-						id="cameraInput" name="upload" />
+						id="cameraInput" name="upload" disabled/>
 				</div>
 				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
 					type="submit" value="Upload" />
