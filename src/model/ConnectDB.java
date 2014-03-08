@@ -23,6 +23,8 @@ public class ConnectDB {
 	private static String videoTimestamp = "videoTimestamp";
 	private static String conversationId = "conversationId";
 	private String url = "url";
+	
+	private static long nextConversationId;
 
 	public ConnectDB() throws SQLException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
@@ -60,7 +62,7 @@ public class ConnectDB {
 	public void insert() throws Exception {
 
 		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
-				+ "', " + 1 + ", " + System.currentTimeMillis() + ", '"
+				+ "', " + 3 + ", " + System.currentTimeMillis() + ", '"
 				+ "url2" + "', 'Ben')");
 
 		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
@@ -79,19 +81,17 @@ public class ConnectDB {
 		while (rs.next()) {
 			// System.out.println(rs.getString(username));
 			System.out.print(rs.getLong(conversationId));
-			System.out.println(" "+rs.getString(username));
+			System.out.println(" " + rs.getString(username));
 		}
 //
-
-
 		// close all the stuff
 		rs.close();
 		statement.close();
 		connection.close();
 	}
 
+	
 	public void clearTable() throws Exception {
-
 		statement.execute("TRUNCATE TABLE " + tableName);
 		System.out.println("t created successfully");
 
@@ -162,9 +162,83 @@ public class ConnectDB {
 		return c;
 	}
 
-	public ArrayList<Conversation> getAllConversation() {
-		return null;
+	/**
+	 * get all the videos (top video for each conversation)
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Video> getTopVideos() throws SQLException {
+		//Conversation c = new Conversation();
+		ArrayList<Video> arr = new ArrayList<Video>();
+		
+		// sql
+		ResultSet rs = statement
+				.executeQuery("select * "
+						+ "from cloudTable t1 "
+						+ "where videoTimestamp in ( "
+							+ "select min(videoTimestamp) "
+							+ "from cloudTable t2 "
+							+ "where t1.conversationId = t2.conversationId "
+							+ "group by t2.conversationId) "
+						+ "Order by conversationId");
+		
+		while (rs.next()) {
+			//System.out.println(rs.getString(url));
+			Video v = new Video();
+			v.setConversationId(rs.getLong(conversationId));		
+			v.setVideoTimestamp(rs.getLong(videoTimestamp));
+					
+			v.setUrl(rs.getString(url));
+			v.setVideoName(rs.getString(videoName));
+			v.setUsername(rs.getString(username));	
+			
+			arr.add(v);
+			
+		}
+		
+		rs.close();
+		nextConversationId = 1 + arr.get(arr.size()-1).getConversationId();
+		return arr;
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Conversation> getAllConversations() throws SQLException {
+		
+		ArrayList<Conversation> array = new ArrayList<Conversation>();
+		
+		// sql
+		ResultSet rs = statement
+				.executeQuery("select * "
+						+ "from cloudTable t1 "
+						+ "where videoTimestamp in ( "
+							+ "select min(videoTimestamp) "
+							+ "from cloudTable t2 "
+							+ "where t1.conversationId = t2.conversationId "
+							+ "group by t2.conversationId) "
+						+ "Order by conversationId");
+		
+		ArrayList<Long> arr = new ArrayList<Long>();	
+		
+		while (rs.next()) {							
+			arr.add(rs.getLong(conversationId));			
+		}
+		rs.close();
+		
+		Conversation c = new Conversation();
+		for(int i = 0; i < arr.size(); i++)	{
+			c = getConversation(arr.get(i));
+			array.add(c);
+		}
+
+		return array;
+	}
+	
+	
 
 	public static void main(String[] args) throws Exception {
 		Video video = new Video("url1", "test1.mp4", 1l, System.currentTimeMillis(), "Allen");
@@ -181,29 +255,27 @@ public class ConnectDB {
 
 		video2 = db.getVideo("url1");
 		
-		System.out.println("*****");
-		System.out.println("this is Conversation 1:");
-	
-		Conversation c = db.getConversation(1);
-		ArrayList<Video> arr = c.getVideoList();
+//		System.out.println("this is Conversation 1:");	
+//		Conversation c = db.getConversation(1);
+//		ArrayList<Video> arr = c.getVideoList();
+//		
+//		System.out.println(arr.get(0).getUsername());	// Allen
+//		System.out.println(arr.get(1).getUsername());	// Ben
+//		System.out.println("this is Conversation 2:");
+//		
+//		c = db.getConversation(2);
+//		ArrayList<Video> arr2 = c.getVideoList();	
+//		System.out.println(arr2.get(0).getUsername());		
 		
-		System.out.println(arr.get(0).getUsername());	// Allen
-		System.out.println(arr.get(1).getUsername());	// Ben
-		
-		
-		System.out.println("this is Conversation 2:");
-		
-		c = db.getConversation(2);
-		ArrayList<Video> arr2 = c.getVideoList();	
-		System.out.println(arr2.get(0).getUsername());
-		
-		
-		System.out.println("******");
+		ArrayList<Video> arr = new ArrayList<Video>();
+		arr = db.getTopVideos();
+		ArrayList<Conversation> array = new ArrayList<Conversation>();
+		array = db.getAllConversations();
 		
 		
 		db.query(a); 			// disconnect
 		// new ControlRDS().deleteRecord("sample.mp4");
-		System.out.println(a.size());
-		
+		System.out.println("success!");
+
 	}
 }
