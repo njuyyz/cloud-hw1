@@ -61,11 +61,11 @@ public class ConnectDB {
 
 		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
 				+ "', " + 1 + ", " + System.currentTimeMillis() + ", '"
-				+ "http://22222" + "', 'Ben')");
+				+ "url2" + "', 'Ben')");
 
 		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
 				+ "', " + 2 + ", " + System.currentTimeMillis() + ", '"
-				+ "http://22222" + "', 'Ryan')");
+				+ "url3" + "', 'Ryan')");
 
 		System.out.println("Insert created successfully");
 	}
@@ -82,9 +82,7 @@ public class ConnectDB {
 			System.out.println(" "+rs.getString(username));
 		}
 //
-//		for (long s : a) {
-//			System.out.println(s);
-//		}
+
 
 		// close all the stuff
 		rs.close();
@@ -129,13 +127,12 @@ public class ConnectDB {
 			v.setUrl(rs.getString(url));
 			v.setVideoName(rs.getString(videoName));
 			v.setUsername(rs.getString(username));	
-			System.out.println(rs.getString(username)+" "+rs.getLong(conversationId));
+			
 		}
 		rs.close();
 		
 		return v;
 	}
-
 
 
 	public Conversation getConversation(long id) throws SQLException {
@@ -153,12 +150,12 @@ public class ConnectDB {
 		}
 		rs.close();
 		System.out.println("urlList size:" + urlList.size());
+		
 		ArrayList<Video> videoList = new ArrayList<Video>();
 		for(int i = 0; i < urlList.size(); i++)	{
 			videoList.add(getVideo(urlList.get(i)));
 		}
-		
-		
+		System.out.println("traverse videolist over");
 		c.setVideoList(videoList);
 		c.setConversationId(id);
 	
