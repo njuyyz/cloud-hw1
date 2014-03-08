@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class ConnectDB {
 	static private Connection connection = null;
 	static private Statement statement = null;
@@ -97,6 +98,20 @@ public class ConnectDB {
 
 	}
 
+	/**
+	 * delete a video from the table
+	 * @param v
+	 * @throws SQLException
+	 */
+	public void deleteVideo(Video v) throws SQLException {
+		v.getUrl();
+		
+		statement.executeUpdate("delete from cloudTable where url = '" + v.getUrl()
+				+ "'");
+		statement.close();
+		connection.close();
+	}
+	
 	public void addVideo(Video v) throws SQLException {
 
 		String url = v.getUrl();
@@ -148,14 +163,14 @@ public class ConnectDB {
 		while (rs.next()) {
 			urlList.add(rs.getString(url));	
 		}
-		rs.close();
-		System.out.println("urlList size:" + urlList.size());
 		
+		rs.close();
 		ArrayList<Video> videoList = new ArrayList<Video>();
+		
 		for(int i = 0; i < urlList.size(); i++)	{
 			videoList.add(getVideo(urlList.get(i)));
 		}
-		System.out.println("traverse videolist over");
+		
 		c.setVideoList(videoList);
 		c.setConversationId(id);
 	
@@ -274,7 +289,7 @@ public class ConnectDB {
 		
 		
 		db.query(a); 			// disconnect
-		// new ControlRDS().deleteRecord("sample.mp4");
+		// db.deleteRecord("url....");
 		System.out.println("success!");
 
 	}

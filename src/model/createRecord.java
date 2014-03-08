@@ -25,17 +25,23 @@ public class createRecord extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+	
+		
 		String r = request.getParameter("number");
 		String objectName = request.getParameter("video");
+		
 		int rating = Integer.parseInt(r);
+		
 		AWSCredentials credentials = new PropertiesCredentials(getClass()
 				.getClassLoader().getResourceAsStream(
 						"AwsCredentials.properties"));
+		
 		String url = "jdbc:mysql://mysqlinstance.crlqbyekgddu.us-east-1.rds.amazonaws.com:3306/";
 		String userName = "company6998";
 		String password = "company6998";
 		String dbName = "db";
 		String driver = "com.mysql.jdbc.Driver";
+		
 		try {
 			Class.forName(driver).newInstance();
 		} catch (InstantiationException e) {
