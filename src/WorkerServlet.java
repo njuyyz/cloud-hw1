@@ -50,9 +50,14 @@ public class WorkerServlet extends HttpServlet {
 			v.setConversationId(1L);
 			v.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
 			v.setVideoName("My Video");
+			Video v2 = new Video();
+			v2.setConversationId(1L);
+			v2.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
+			v2.setVideoName("My Video");
 			
-			
+
 			videoList.add(v);
+			videoList.add(v2);
 			c.setVideoList(videoList);
 			list.add(c);
 		}
@@ -68,7 +73,7 @@ public class WorkerServlet extends HttpServlet {
 			// item should not be retried.
 			ArrayList<Conversation> conList = retreiveConversations();
 			request.setAttribute("conversationList", conList);
-			request.getRequestDispatcher("Index.jsp")
+			request.getRequestDispatcher("index2.jsp")
 					.forward(request, response);
 
 			response.setStatus(200);

@@ -114,29 +114,18 @@ div.upload input {
 							// for any authentication related change, such as login, logout or session refresh. This means that
 							// whenever someone who was previously logged out tries to log in again, the correct case below 
 							// will be handled. 
-							FB.Event
-									.subscribe(
+							FB.Event.subscribe(
 											'auth.authResponseChange',
 											function(response) {
 												// Here we specify what we do with the response anytime this event occurs. 
 												if (response.status === 'connected') {
-													document
-															.getElementById("cameraInput").disabled = false;
-													document
-															.getElementById("dc").disabled = false;
-													document
-															.getElementById("dc").style.background = "url(new_conversation_btn.png)";
-													document
-															.getElementById("dc").style.backgroundSize = "200px 50px";
-													FB
-															.api(
-																	'/me',
-																	function(
-																			response) {
-
-																		document
-																				.getElementById('inputUserId').value = response.id;
-																	});
+													document.getElementById("cameraInput").disabled = false;
+													document.getElementById("dc").disabled = false;
+													document.getElementById("dc").style.background = "url(new_conversation_btn.png)";
+													document.getElementById("dc").style.backgroundSize = "200px 50px";
+													FB.api('/me',function(response1) {
+														document.getElementById('inputUserId').value = response1.id;
+													});
 												} else if (response.status === 'not_authorized') {
 													// In this case, the person is logged into Facebook, but not into the app, so we call
 													// FB.login() to prompt them to do so. 
@@ -145,14 +134,10 @@ div.upload input {
 													// (1) JavaScript created popup windows are blocked by most browsers unless they 
 													// result from direct interaction from people using the app (such as a mouse click)
 													// (2) it is a bad experience to be continually prompted to login upon page load.
-													document
-															.getElementById("cameraInput").disabled = true;
-													document
-															.getElementById("dc").disabled = true;
-													document
-															.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
-													document
-															.getElementById("dc").style.backgroundSize = "200px 50px";
+													document.getElementById("cameraInput").disabled = true;
+													document.getElementById("dc").disabled = true;
+													document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+													document.getElementById("dc").style.backgroundSize = "200px 50px";
 
 												} else {
 													// In this case, the person is not logged into Facebook, so we call the login() 
@@ -160,14 +145,10 @@ div.upload input {
 													// of whether they are logged into the app. If they aren't then they'll see the Login
 													// dialog right after they log in to Facebook. 
 													// The same caveats as above apply to the FB.login() call here.
-													document
-															.getElementById("cameraInput").disabled = true;
-													document
-															.getElementById("dc").disabled = true;
-													document
-															.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
-													document
-															.getElementById("dc").style.backgroundSize = "200px 50px";
+													document.getElementById("cameraInput").disabled = true;
+													document.getElementById("dc").disabled = true;
+													document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+													document.getElementById("dc").style.backgroundSize = "200px 50px";
 												}
 											});
 						};
