@@ -14,6 +14,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
+<script type="text/javascript">
+	document.createElement('video');
+	document.createElement('audio');
+	document.createElement('track');
+
+	$(document).ready(function() {
+		$("#message").fadeIn("slow");
+		$("#message").fadeOut("slow");
+	});
+</script>
+<style type="text/css">
+#message {
+	font-family: Arial, Helvetica, sans-serif;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 105;
+	text-align: center;
+	font-weight: bold;
+	font-size: 100%;
+	color: white;
+	padding: 10px 0px 10px 0px;
+	background-color: #AEB404;
+}
+
+#message span {
+	text-align: center;
+	width: 95%;
+	float: left;
+}
+
+div.upload {
+	width: 200px;
+	height: 50px;
+	background: url(new_conversation_btn_false.png);
+	background-size: 200px 50px;
+	overflow: hidden;
+}
+
+div.upload input {
+	display: block !important;
+	width: 157px !important;
+	height: 57px !important;
+	opacity: 0 !important;
+	overflow: hidden !important;
+}
+</style>
+<link href="//vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.4/video.js"></script>
+
 
 <title>Carousel Template for Bootstrap</title>
 
@@ -35,6 +86,18 @@
 <!-- NAVBAR
   ================================================== -->
 <body>
+	<%
+		String status = "";
+		if (request.getAttribute("UploadStatus") != null) {
+		 status = (String) request.getAttribute("UploadStatus");
+	%>
+	<div id='message' style="display: none;">
+		<span><%=status%></span>
+	</div>
+	<%
+		}
+	%>
+
 	<div class="navbar-wrapper">
 		<div class="container">
 
@@ -55,102 +118,14 @@
 							<li><a href="#about">About</a></li>
 						</ul>
 					</div>
-					<div class="navbar-right ">
-						<div id="fb-root"></div>
-						<script>
-							window.fbAsyncInit = function() {
-								FB.init({
-									appId : 382097358596865,
-									status : true, // check login status
-									cookie : true, // enable cookies to allow the server to access the session
-									xfbml : true
-								// parse XFBML
-								});
 
-								// Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-								// for any authentication related change, such as login, logout or session refresh. This means that
-								// whenever someone who was previously logged out tries to log in again, the correct case below 
-								// will be handled. 
-								FB.Event
-										.subscribe(
-												'auth.authResponseChange',
-												function(response) {
-													// Here we specify what we do with the response anytime this event occurs. 
-													if (response.status === 'connected') {
-														document
-																.getElementById("cameraInput").disabled = false;
-														document
-																.getElementById("dc").disabled = false;
-														document
-																.getElementById("dc").style.background = "url(new_conversation_btn.png)";
-														document
-																.getElementById("dc").style.backgroundSize = "200px 50px";
-														FB
-																.api(
-																		'/me',
-																		function(
-																				response1) {
-																			document
-																					.getElementById('inputUserId').value = response1.id;
-																		});
-													} else if (response.status === 'not_authorized') {
-														// In this case, the person is logged into Facebook, but not into the app, so we call
-														// FB.login() to prompt them to do so. 
-														// In real-life usage, you wouldn't want to immediately prompt someone to login 
-														// like this, for two reasons:
-														// (1) JavaScript created popup windows are blocked by most browsers unless they 
-														// result from direct interaction from people using the app (such as a mouse click)
-														// (2) it is a bad experience to be continually prompted to login upon page load.
-														document
-																.getElementById("cameraInput").disabled = true;
-														document
-																.getElementById("dc").disabled = true;
-														document
-																.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
-														document
-																.getElementById("dc").style.backgroundSize = "200px 50px";
 
-													} else {
-														// In this case, the person is not logged into Facebook, so we call the login() 
-														// function to prompt them to do so. Note that at this stage there is no indication
-														// of whether they are logged into the app. If they aren't then they'll see the Login
-														// dialog right after they log in to Facebook. 
-														// The same caveats as above apply to the FB.login() call here.
-														document
-																.getElementById("cameraInput").disabled = true;
-														document
-																.getElementById("dc").disabled = true;
-														document
-																.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
-														document
-																.getElementById("dc").style.backgroundSize = "200px 50px";
-													}
-												});
-							};
-
-							// Load the SDK asynchronously
-							(function(d) {
-								var js, id = 'facebook-jssdk', ref = d
-										.getElementsByTagName('script')[0];
-								if (d.getElementById(id)) {
-									return;
-								}
-								js = d.createElement('script');
-								js.id = id;
-								js.async = true;
-								js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=382097358596865";
-								ref.parentNode.insertBefore(js, ref);
-							}(document));
-						</script>
-						<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
-							data-show-faces="true" data-auto-logout-link="true"></div>
-
-					</div>
 				</div>
 			</div>
 
 		</div>
 	</div>
+
 
 
 	<!-- Carousel
@@ -202,6 +177,99 @@
 	<!-- /.carousel -->
 
 
+	<div class="jumbotron">
+		<div class="container">
+			<form action="upload" method="post" enctype="multipart/form-data">
+				<div class="upload" id="dc">
+					<input type="file" capture="camera" accept="video/*"
+						id="cameraInput" name="upload" disabled />
+				</div>
+				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
+					type="submit" value="Upload" />
+			</form>
+
+		</div>
+		<div class="container">
+			<div id="fb-root"></div>
+			<script>
+				window.fbAsyncInit = function() {
+					FB.init({
+						appId : 382097358596865,
+						status : true, // check login status
+						cookie : true, // enable cookies to allow the server to access the session
+						xfbml : true
+					// parse XFBML
+					});
+
+					// Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+					// for any authentication related change, such as login, logout or session refresh. This means that
+					// whenever someone who was previously logged out tries to log in again, the correct case below 
+					// will be handled. 
+					FB.Event
+							.subscribe(
+									'auth.authResponseChange',
+									function(response) {
+										// Here we specify what we do with the response anytime this event occurs. 
+										if (response.status === 'connected') {
+											document
+													.getElementById("cameraInput").disabled = false;
+											document.getElementById("dc").disabled = false;
+											document.getElementById("dc").style.background = "url(new_conversation_btn.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
+											FB
+													.api(
+															'/me',
+															function(response1) {
+																document
+																		.getElementById('inputUserId').value = response1.id;
+															});
+										} else if (response.status === 'not_authorized') {
+											// In this case, the person is logged into Facebook, but not into the app, so we call
+											// FB.login() to prompt them to do so. 
+											// In real-life usage, you wouldn't want to immediately prompt someone to login 
+											// like this, for two reasons:
+											// (1) JavaScript created popup windows are blocked by most browsers unless they 
+											// result from direct interaction from people using the app (such as a mouse click)
+											// (2) it is a bad experience to be continually prompted to login upon page load.
+											document
+													.getElementById("cameraInput").disabled = true;
+											document.getElementById("dc").disabled = true;
+											document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
+
+										} else {
+											// In this case, the person is not logged into Facebook, so we call the login() 
+											// function to prompt them to do so. Note that at this stage there is no indication
+											// of whether they are logged into the app. If they aren't then they'll see the Login
+											// dialog right after they log in to Facebook. 
+											// The same caveats as above apply to the FB.login() call here.
+											document
+													.getElementById("cameraInput").disabled = true;
+											document.getElementById("dc").disabled = true;
+											document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
+										}
+									});
+				};
+
+				// Load the SDK asynchronously
+				(function(d) {
+					var js, id = 'facebook-jssdk', ref = d
+							.getElementsByTagName('script')[0];
+					if (d.getElementById(id)) {
+						return;
+					}
+					js = d.createElement('script');
+					js.id = id;
+					js.async = true;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=382097358596865";
+					ref.parentNode.insertBefore(js, ref);
+				}(document));
+			</script>
+			<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
+				data-show-faces="true" data-auto-logout-link="true"></div>
+		</div>
+	</div>
 
 	<!-- Marketing messaging and featurettes
     ================================================== -->
@@ -246,31 +314,31 @@
 				<div class="item active">
 					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a">
 					<div class="container">
-							<div class="carousel-caption">
-								<div class="col-md-7">
-									<h2 class="featurette-heading">
-										<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
-									</h2>
-									<p class="lead">Donec ullamcorper nulla non metus auctor
-										fringilla. Vestibulum id ligula porta felis euismod semper.
-										Praesent commodo cursus magna, vel scelerisque nisl
-										consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-								</div>
-								<div class="col-md-5">
-
-									<video id="example_video_1"
-										class="video-js vjs-default-skin vjs-big-play-centered"
-										controls preload="auto" width="400" height="400"
-										poster="http://video-js.zencoder.com/oceans-clip.png"
-										data-setup='{"example_option":true}'>
-										<%
-											String url0 = videoList.get(0).getUrl();
-										%>
-										<source src="<%=url0%>" type="video/mp4">
-									</video>
-								</div>
+						<div class="carousel-caption">
+							<div class="col-md-7">
+								<h2 class="featurette-heading">
+									<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
+								</h2>
+								<p class="lead">Donec ullamcorper nulla non metus auctor
+									fringilla. Vestibulum id ligula porta felis euismod semper.
+									Praesent commodo cursus magna, vel scelerisque nisl
+									consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
 							</div>
-						</div> 
+							<div class="col-md-5">
+
+								<video id="example_video_1"
+									class="video-js vjs-default-skin vjs-big-play-centered"
+									controls preload="auto" width="400" height="400"
+									poster="http://video-js.zencoder.com/oceans-clip.png"
+									data-setup='{"example_option":true}'>
+									<%
+										String url0 = videoList.get(0).getUrl();
+									%>
+									<source src="<%=url0%>" type="video/mp4">
+								</video>
+							</div>
+						</div>
+					</div>
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
@@ -278,31 +346,31 @@
 				<div class="item">
 					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a">
 					<div class="container">
-							<div class="carousel-caption">
-								<div class="col-md-7">
-									<h2 class="featurette-heading">
-										<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
-									</h2>
-									<p class="lead">Donec ullamcorper nulla non metus auctor
-										fringilla. Vestibulum id ligula porta felis euismod semper.
-										Praesent commodo cursus magna, vel scelerisque nisl
-										consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-								</div>
-								<div class="col-md-5">
-
-									<video id="example_video_1"
-										class="video-js vjs-default-skin vjs-big-play-centered"
-										controls preload="auto" width="400" height="400"
-										poster="http://video-js.zencoder.com/oceans-clip.png"
-										data-setup='{"example_option":true}'>
-										<%
-											String url = videoList.get(j).getUrl();
-										%>
-										<source src="<%=url%>" type="video/mp4">
-									</video>
-								</div>
+						<div class="carousel-caption">
+							<div class="col-md-7">
+								<h2 class="featurette-heading">
+									<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
+								</h2>
+								<p class="lead">Donec ullamcorper nulla non metus auctor
+									fringilla. Vestibulum id ligula porta felis euismod semper.
+									Praesent commodo cursus magna, vel scelerisque nisl
+									consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
 							</div>
-						</div> 
+							<div class="col-md-5">
+
+								<video id="example_video_1"
+									class="video-js vjs-default-skin vjs-big-play-centered"
+									controls preload="auto" width="400" height="400"
+									poster="http://video-js.zencoder.com/oceans-clip.png"
+									data-setup='{"example_option":true}'>
+									<%
+										String url = videoList.get(j).getUrl();
+									%>
+									<source src="<%=url%>" type="video/mp4">
+								</video>
+							</div>
+						</div>
+					</div>
 				</div>
 				<%
 					}

@@ -25,10 +25,12 @@ public class ConnectDB {
 	private static String conversationId = "conversationId";
 	private String url = "url";
 	
-	private static long nextConversationId;
+	private static long nextConversationId = 1;
+	
+	private static ConnectDB instance = null;
 
-	public ConnectDB() throws SQLException, InstantiationException,
-			IllegalAccessException, ClassNotFoundException {
+	private ConnectDB() {
+		
 
 		String url_connection = "jdbc:mysql://mydbinstance.co9r6pzgikbx.us-east-1.rds.amazonaws.com:3306/";
 
@@ -38,57 +40,112 @@ public class ConnectDB {
 
 		String driver = "com.mysql.jdbc.Driver";
 
-		Class.forName(driver).newInstance();
-		connection = DriverManager.getConnection(url_connection + dbName, user,
-				password);
-		statement = connection.createStatement();
-		System.out.println(connection.getCatalog());
+		try {
+			Class.forName(driver).newInstance();
+			connection = DriverManager.getConnection(url_connection + dbName, user,
+					password);
+			statement = connection.createStatement();
+			System.out.println(connection.getCatalog());
+			
+			createTable();
+			
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
+	
+	public static ConnectDB getInstance(){
+		if(instance == null){
+			instance = new ConnectDB();
+		}
+		return instance;
+	}
 
-	public void createTable() throws SQLException {
+	public void createTable() {
 
-		statement.execute("DROP TABLE IF EXISTS " + tableName);
-		System.out.println("Create a new table: " + tableName);
+//		try {
+//			statement.execute("DROP TABLE IF EXISTS " + tableName);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println("Create a new table: " + tableName);
 
 		// // I chose int for JAVA's (long)!!!
-		statement
-				.execute("create table "
-						+ tableName
-						+ " (videoName varchar(32), conversationId bigint, videoTimestamp bigint, url varchar(100), username varchar(32))");
+		try {
+			statement
+					.execute("create table if not exists "
+							+ tableName
+							+ " (videoName varchar(32), conversationId bigint, videoTimestamp bigint, url varchar(100), username varchar(32))");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Table created successfully");
 
 	}
 
-	public void insert() throws Exception {
+	public void insert(){
 
-		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
-				+ "', " + 3 + ", " + System.currentTimeMillis() + ", '"
-				+ "url2" + "', 'Ben')");
+		try {
+			statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
+					+ "', " + 3 + ", " + System.currentTimeMillis() + ", '"
+					+ "url2" + "', 'Ben')");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
-				+ "', " + 2 + ", " + System.currentTimeMillis() + ", '"
-				+ "url3" + "', 'Ryan')");
+		try {
+			statement.executeUpdate("insert into cloudTable values ('" + "test.mp4"
+					+ "', " + 2 + ", " + System.currentTimeMillis() + ", '"
+					+ "url3" + "', 'Ryan')");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.out.println("Insert created successfully");
 	}
 
 	// print all videos' names
-	public void query(ArrayList<Long> a) throws Exception {
+	public void query(ArrayList<Long> a){
 
-		ResultSet rs = statement
-				.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable order by videoTimestamp desc");
+		ResultSet rs = null;
+		try {
+			rs = statement
+					.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable order by videoTimestamp desc");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		while (rs.next()) {
-			// System.out.println(rs.getString(username));
-			System.out.print(rs.getLong(conversationId));
-			System.out.println(" " + rs.getString(username));
+		try {
+			while (rs.next()) {
+				// System.out.println(rs.getString(username));
+				System.out.print(rs.getLong(conversationId));
+				System.out.println(" " + rs.getString(username));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 //
 		// close all the stuff
-		rs.close();
-		statement.close();
-		connection.close();
+		try {
+			rs.close();
+			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -103,48 +160,72 @@ public class ConnectDB {
 	 * @param v
 	 * @throws SQLException
 	 */
-	public void deleteVideo(Video v) throws SQLException {
+	public void deleteVideo(Video v){
 		v.getUrl();
 		
-		statement.executeUpdate("delete from cloudTable where url = '" + v.getUrl()
-				+ "'");
-		statement.close();
-		connection.close();
+		try {
+			statement.executeUpdate("delete from cloudTable where url = '" + v.getUrl()
+					+ "'");
+			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void addConversation(Video v){
+		
+		// race condition?
+		v.setConversationId(nextConversationId++);
+		addVideo(v);
+		
 	}
 	
-	public void addVideo(Video v) throws SQLException {
+	public String addVideo(Video v){
 
 		String url = v.getUrl();
 		String videoName = v.getVideoName();
 		long conversationId = v.getConversationId();
 		long videoTimestamp = v.getVideoTimestamp();
 		String username = v.getUsername();
-
-		statement.executeUpdate("insert into cloudTable values ('" + videoName
-				+ "', " + conversationId + ", " + videoTimestamp + ", '" + url
-				+ "', '" + username + "')");
+		String status = url;
+		try {
+			statement.executeUpdate("insert into cloudTable values ('" + videoName
+					+ "', " + conversationId + ", " + videoTimestamp + ", '" + url
+					+ "', '" + username + "')");
+			return status+" success";
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			return status+ e.getMessage();
+		}
 	}
 
-	public Video getVideo(String URL) throws SQLException {
+	public Video getVideo(String URL){
 		Video v = new Video();
 		
-		ResultSet rs = statement
-				.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable where url = '"
-						+ URL + "'");
-
-		while (rs.next()) {
-	
-			// System.out.println(rel.getString("name"));
+		ResultSet rs;
+		try {
+			rs = statement
+					.executeQuery("select username, videoName, videoTimestamp, conversationId, url from cloudTable where url = '"
+							+ URL + "'");
+			while (rs.next()) {
 				
-			v.setConversationId(rs.getLong(conversationId));		
-			v.setVideoTimestamp(rs.getLong(videoTimestamp));
+				// System.out.println(rel.getString("name"));
 					
-			v.setUrl(rs.getString(url));
-			v.setVideoName(rs.getString(videoName));
-			v.setUsername(rs.getString(username));	
-			
+				v.setConversationId(rs.getLong(conversationId));		
+				v.setVideoTimestamp(rs.getLong(videoTimestamp));
+						
+				v.setUrl(rs.getString(url));
+				v.setVideoName(rs.getString(videoName));
+				v.setUsername(rs.getString(username));	
+				
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		rs.close();
+
 		
 		return v;
 	}
@@ -182,36 +263,42 @@ public class ConnectDB {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Video> getTopVideos() throws SQLException {
+	public ArrayList<Video> getTopVideos(){
 		//Conversation c = new Conversation();
 		ArrayList<Video> arr = new ArrayList<Video>();
 		
 		// sql
-		ResultSet rs = statement
-				.executeQuery("select * "
-						+ "from cloudTable t1 "
-						+ "where videoTimestamp in ( "
-							+ "select min(videoTimestamp) "
-							+ "from cloudTable t2 "
-							+ "where t1.conversationId = t2.conversationId "
-							+ "group by t2.conversationId) "
-						+ "Order by conversationId");
-		
-		while (rs.next()) {
-			//System.out.println(rs.getString(url));
-			Video v = new Video();
-			v.setConversationId(rs.getLong(conversationId));		
-			v.setVideoTimestamp(rs.getLong(videoTimestamp));
-					
-			v.setUrl(rs.getString(url));
-			v.setVideoName(rs.getString(videoName));
-			v.setUsername(rs.getString(username));	
+		ResultSet rs;
+		try {
+			rs = statement
+					.executeQuery("select * "
+							+ "from cloudTable t1 "
+							+ "where videoTimestamp in ( "
+								+ "select min(videoTimestamp) "
+								+ "from cloudTable t2 "
+								+ "where t1.conversationId = t2.conversationId "
+								+ "group by t2.conversationId) "
+							+ "Order by conversationId");
 			
-			arr.add(v);
+			while (rs.next()) {
+				//System.out.println(rs.getString(url));
+				Video v = new Video();
+				v.setConversationId(rs.getLong(conversationId));		
+				v.setVideoTimestamp(rs.getLong(videoTimestamp));
+						
+				v.setUrl(rs.getString(url));
+				v.setVideoName(rs.getString(videoName));
+				v.setUsername(rs.getString(username));	
+				
+				arr.add(v);
+				
+			}
 			
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		rs.close();
 		nextConversationId = 1 + arr.get(arr.size()-1).getConversationId();
 		return arr;
 	}
@@ -222,75 +309,83 @@ public class ConnectDB {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Conversation> getAllConversations() throws SQLException {
+	public ArrayList<Conversation> getAllConversations(){
 		
 		ArrayList<Conversation> array = new ArrayList<Conversation>();
 		
 		// sql
-		ResultSet rs = statement
-				.executeQuery("select * "
-						+ "from cloudTable t1 "
-						+ "where videoTimestamp in ( "
-							+ "select min(videoTimestamp) "
-							+ "from cloudTable t2 "
-							+ "where t1.conversationId = t2.conversationId "
-							+ "group by t2.conversationId) "
-						+ "Order by conversationId");
-		
-		ArrayList<Long> arr = new ArrayList<Long>();	
-		
-		while (rs.next()) {							
-			arr.add(rs.getLong(conversationId));			
+		ResultSet rs;
+		try {
+			rs = statement
+					.executeQuery("select * "
+							+ "from cloudTable t1 "
+							+ "where videoTimestamp in ( "
+								+ "select min(videoTimestamp) "
+								+ "from cloudTable t2 "
+								+ "where t1.conversationId = t2.conversationId "
+								+ "group by t2.conversationId) "
+							+ "Order by conversationId");
+			
+			ArrayList<Long> arr = new ArrayList<Long>();	
+			
+			while (rs.next()) {							
+				arr.add(rs.getLong(conversationId));			
+			}
+			rs.close();
+			
+			Conversation c = new Conversation();
+			for(int i = 0; i < arr.size(); i++)	{
+				c = getConversation(arr.get(i));
+				array.add(c);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		rs.close();
-		
-		Conversation c = new Conversation();
-		for(int i = 0; i < arr.size(); i++)	{
-			c = getConversation(arr.get(i));
-			array.add(c);
-		}
+
+		nextConversationId = 1 + array.get(array.size()-1).getConversationId();
 
 		return array;
 	}
 	
 	
 
-	public static void main(String[] args) throws Exception {
-		Video video = new Video("url1", "test1.mp4", 1l, System.currentTimeMillis(), "Allen");
-			
-		Video video2;
-		
-		ConnectDB db = new ConnectDB();
-
-		db.createTable();
-		db.addVideo(video);
-		db.insert();
-
-		ArrayList<Long> a = new ArrayList<Long>();
-
-		video2 = db.getVideo("url1");
-		
-//		System.out.println("this is Conversation 1:");	
-//		Conversation c = db.getConversation(1);
-//		ArrayList<Video> arr = c.getVideoList();
+//	public static void main(String[] args){
+//		Video video = new Video("url1", "test1.mp4", 1l, System.currentTimeMillis(), "Allen");
+//			
+//		Video video2;
 //		
-//		System.out.println(arr.get(0).getUsername());	// Allen
-//		System.out.println(arr.get(1).getUsername());	// Ben
-//		System.out.println("this is Conversation 2:");
+//		ConnectDB db = new ConnectDB();
+//
+//		db.createTable();
+//		db.addVideo(video);
+//		db.insert();
+//
+//		ArrayList<Long> a = new ArrayList<Long>();
+//
+//		video2 = db.getVideo("url1");
 //		
-//		c = db.getConversation(2);
-//		ArrayList<Video> arr2 = c.getVideoList();	
-//		System.out.println(arr2.get(0).getUsername());		
-		
-		ArrayList<Video> arr = new ArrayList<Video>();
-		arr = db.getTopVideos();
-		ArrayList<Conversation> array = new ArrayList<Conversation>();
-		array = db.getAllConversations();
-		
-		
-		db.query(a); 			// disconnect
-		// db.deleteRecord("url....");
-		System.out.println("success!");
-
-	}
+////		System.out.println("this is Conversation 1:");	
+////		Conversation c = db.getConversation(1);
+////		ArrayList<Video> arr = c.getVideoList();
+////		
+////		System.out.println(arr.get(0).getUsername());	// Allen
+////		System.out.println(arr.get(1).getUsername());	// Ben
+////		System.out.println("this is Conversation 2:");
+////		
+////		c = db.getConversation(2);
+////		ArrayList<Video> arr2 = c.getVideoList();	
+////		System.out.println(arr2.get(0).getUsername());		
+//		
+//		ArrayList<Video> arr = new ArrayList<Video>();
+//		arr = db.getTopVideos();
+//		ArrayList<Conversation> array = new ArrayList<Conversation>();
+//		array = db.getAllConversations();
+//		
+//		
+//		db.query(a); 			// disconnect
+//		// db.deleteRecord("url....");
+//		System.out.println("success!");
+//
+//	}
 }

@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.ConnectDB;
+import model.Video;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -18,6 +21,7 @@ import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -29,6 +33,8 @@ public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static String bucket = "allen.ryan.bucket.1";
+	
+	public static final String cloudFrontUrl = "http://d3gflyc7e9bpot.cloudfront.net/";
 
 	/**
 	 * A client to use to access Amazon S3. Pulls credentials from the
@@ -58,9 +64,20 @@ public class UploadServlet extends HttpServlet {
 				
 				InputStream is = items.get(0).getInputStream();
 				String key = "" + System.currentTimeMillis() + request.getRemoteAddr() + items.get(0).getName();
-				s3.putObject(new PutObjectRequest(getBucket(), key, is, new ObjectMetadata()));
+				PutObjectRequest putObj = new PutObjectRequest(getBucket(), key, is, new ObjectMetadata());
+	            putObj.setCannedAcl(CannedAccessControlList.PublicRead);
+				s3.putObject(putObj);
+				
+				request.setAttribute("UploadStatus", "before Video;  ");
+				Video v= new Video();
+				v.setUsername(userId);
+				v.setUrl(cloudFrontUrl+key);
+				v.setVideoName(items.get(0).getName());
+				v.setVideoTimestamp(System.currentTimeMillis());
+				
+				ConnectDB conDB = ConnectDB.getInstance();
+				conDB.addConversation(v);
 
-				request.setAttribute("UploadStatus", "Upload Success:"+ userId);
 			}else{
 				request.setAttribute("UploadStatus", ""+items.size());
 			}
