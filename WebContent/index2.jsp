@@ -89,9 +89,10 @@ div.upload input {
   ================================================== -->
 <body>
 	<%
-		String status = "";
-			if (request.getAttribute("UploadStatus") != null) {
-			 status = (String) request.getAttribute("UploadStatus");
+		String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
+			String status = "";
+		if (request.getAttribute("UploadStatus") != null) {
+		 status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
 		<span><%=status%></span>
@@ -286,12 +287,12 @@ div.upload input {
 
 	<%
 		ArrayList<Conversation> conList = (ArrayList<Conversation>) request
-			.getAttribute("conversationList");
+		.getAttribute("conversationList");
 	%>
 	<%
 		for (int i = 0; i < conList.size(); i++) {
-		Conversation con = conList.get(i);
-		ArrayList<Video> videoList = con.getVideoList();
+			Conversation con = conList.get(i);
+			ArrayList<Video> videoList = con.getVideoList();
 	%>
 	<div class="container marketing">
 
@@ -335,12 +336,22 @@ div.upload input {
 
 								<%
 									String url0 = videoList.get(0).getUrl();
+															int dashIndex = url0.lastIndexOf("/");
+															String httpUrl0 = httpStart+url0.substring(dashIndex+1);
 								%>
-								<div id="myElement<%=con.getConversationId()%>.0">Loading the player...</div>
+								<div id="myElement<%=con.getConversationId()%>.0">Loading
+									the player...</div>
 
 								<script type="text/javascript">
               jwplayer("myElement<%=con.getConversationId()%>.0").setup({
-                file: "<%=url0%>"
+            	  playlist: [{
+					sources: [{
+	                      file: "<%=url0%>"
+	                      },{
+	                   	  file: "<%=httpUrl0%>"
+					}]
+            	  }],
+              primary: "flash"
 
 									});
 								</script>
@@ -351,7 +362,9 @@ div.upload input {
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
-						String videoUrl = videoList.get(j).getUrl();
+								String videoUrl = videoList.get(j).getUrl();
+								int dashIndex1 = url0.lastIndexOf("/");
+								String httpUrl1 = httpStart+url0.substring(dashIndex+1);
 				%>
 				<div class="item">
 					<!-- 
@@ -371,11 +384,18 @@ div.upload input {
 							<div class="col-md-5">
 
 
-								<div id="myElement<%=con.getConversationId()%>.<%=j%>">Loading the player...</div>
-
+								<div id="myElement<%=con.getConversationId()%>.<%=j%>">Loading
+									the player...</div>
 								<script type="text/javascript">
               jwplayer("myElement<%=con.getConversationId()%>.<%=j%>").setup({
-                file: "<%=videoUrl%>"
+            	  playlist: [{
+					sources: [{
+	                      file: "<%=videoUrl%>"
+	                      },{
+	                   	  file: "<%=httpUrl1%>"
+					}]
+            	  }],
+              primary: "flash"
 
 									});
 								</script>
