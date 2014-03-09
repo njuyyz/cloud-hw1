@@ -34,7 +34,7 @@ public class UploadServlet extends HttpServlet {
 
 	private static String bucket = "allen.ryan.bucket.1";
 	
-	public static final String cloudFrontUrl = "http://d3gflyc7e9bpot.cloudfront.net/";
+	public static final String cloudFrontUrl = "rtmp://s1f29zvynq6sfw.cloudfront.net/cfx/st/";
 
 	/**
 	 * A client to use to access Amazon S3. Pulls credentials from the

@@ -14,6 +14,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
+
+<script type="text/javascript" src="jwplayer/jwplayer.js"></script>
 <script type="text/javascript">
 	document.createElement('video');
 	document.createElement('audio');
@@ -88,8 +90,8 @@ div.upload input {
 <body>
 	<%
 		String status = "";
-		if (request.getAttribute("UploadStatus") != null) {
-		 status = (String) request.getAttribute("UploadStatus");
+			if (request.getAttribute("UploadStatus") != null) {
+			 status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
 		<span><%=status%></span>
@@ -139,9 +141,10 @@ div.upload input {
 		</ol>
 		<div class="carousel-inner">
 			<div class="item active">
+				<!-- 
 				<img
 					data-src="holder/holder.js/900x500/auto/#777:#7a7a7a/text:First slide"
-					alt="First slide">
+					alt="First slide"> -->
 				<div class="container">
 					<div class="carousel-caption">
 						<!-- write something here -->
@@ -153,17 +156,19 @@ div.upload input {
 				</div>
 			</div>
 			<div class="item">
+				<!-- 
 				<img
 					data-src="holder/holder.js/900x500/auto/#666:#6a6a6a/text:Second slide"
-					alt="Second slide">
+					alt="Second slide"> -->
 				<div class="container">
 					<div class="carousel-caption"></div>
 				</div>
 			</div>
 			<div class="item">
+				<!-- 
 				<img
 					data-src="holder/holder.js/900x500/auto/#555:#5a5a5a/text:Third slide"
-					alt="Third slide">
+					alt="Third slide"> -->
 				<div class="container">
 					<div class="carousel-caption"></div>
 				</div>
@@ -181,8 +186,8 @@ div.upload input {
 		<div class="container">
 			<form action="upload" method="post" enctype="multipart/form-data">
 				<div class="upload" id="dc">
-					<input type="file" capture="camera" accept="video/*"
-						id="cameraInput" name="upload" disabled />
+					<input type="file" capture="camera" id="cameraInput" name="upload"
+						disabled />
 				</div>
 				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
 					type="submit" value="Upload" />
@@ -281,12 +286,12 @@ div.upload input {
 
 	<%
 		ArrayList<Conversation> conList = (ArrayList<Conversation>) request
-				.getAttribute("conversationList");
+			.getAttribute("conversationList");
 	%>
 	<%
 		for (int i = 0; i < conList.size(); i++) {
-			Conversation con = conList.get(i);
-			ArrayList<Video> videoList = con.getVideoList();
+		Conversation con = conList.get(i);
+		ArrayList<Video> videoList = con.getVideoList();
 	%>
 	<div class="container marketing">
 
@@ -312,62 +317,68 @@ div.upload input {
 
 			<div class="carousel-inner">
 				<div class="item active">
-					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a">
+					<!-- 
+					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a"> -->
 					<div class="container">
 						<div class="carousel-caption">
 							<div class="col-md-7">
 								<h2 class="featurette-heading">
-									<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
+									<%=con.getConversationId()%>
 								</h2>
-								<p class="lead">Donec ullamcorper nulla non metus auctor
-									fringilla. Vestibulum id ligula porta felis euismod semper.
-									Praesent commodo cursus magna, vel scelerisque nisl
-									consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+								<p class="lead">
+									This is My
+									<%=con.getConversationId()%>
+									Conversation.Please join my conversation topic
+								</p>
 							</div>
 							<div class="col-md-5">
 
-								<video id="example_video_1"
-									class="video-js vjs-default-skin vjs-big-play-centered"
-									controls preload="auto" width="400" height="400"
-									poster="http://video-js.zencoder.com/oceans-clip.png"
-									data-setup='{"example_option":true}'>
-									<%
-										String url0 = videoList.get(0).getUrl();
-									%>
-									<source src="<%=url0%>" type="video/mp4">
-								</video>
+								<%
+									String url0 = videoList.get(0).getUrl();
+								%>
+								<div id="myElement<%=con.getConversationId()%>.0">Loading the player...</div>
+
+								<script type="text/javascript">
+              jwplayer("myElement<%=con.getConversationId()%>.0").setup({
+                file: "<%=url0%>"
+
+									});
+								</script>
+
 							</div>
 						</div>
 					</div>
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
+						String videoUrl = videoList.get(j).getUrl();
 				%>
 				<div class="item">
-					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a">
+					<!-- 
+					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a"> -->
 					<div class="container">
 						<div class="carousel-caption">
 							<div class="col-md-7">
 								<h2 class="featurette-heading">
-									<%=con.getConversationId()%><span class="text-muted"><%=con.getConversationId()%></span>
+									<%=con.getConversationId()%>
 								</h2>
-								<p class="lead">Donec ullamcorper nulla non metus auctor
-									fringilla. Vestibulum id ligula porta felis euismod semper.
-									Praesent commodo cursus magna, vel scelerisque nisl
-									consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+								<p class="lead">
+									This is My
+									<%=con.getConversationId()%>
+									Conversation.Please join my conversation topic
+								</p>
 							</div>
 							<div class="col-md-5">
 
-								<video id="example_video_1"
-									class="video-js vjs-default-skin vjs-big-play-centered"
-									controls preload="auto" width="400" height="400"
-									poster="http://video-js.zencoder.com/oceans-clip.png"
-									data-setup='{"example_option":true}'>
-									<%
-										String url = videoList.get(j).getUrl();
-									%>
-									<source src="<%=url%>" type="video/mp4">
-								</video>
+
+								<div id="myElement<%=con.getConversationId()%>.<%=j%>">Loading the player...</div>
+
+								<script type="text/javascript">
+              jwplayer("myElement<%=con.getConversationId()%>.<%=j%>").setup({
+                file: "<%=videoUrl%>"
+
+									});
+								</script>
 							</div>
 						</div>
 					</div>
