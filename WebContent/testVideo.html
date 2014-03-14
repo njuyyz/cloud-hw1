@@ -1,0 +1,27 @@
+
+<html>
+<head>
+	<script type="text/javascript">
+	document.createElement('video');
+	document.createElement('audio');
+	document.createElement('track');
+	</script>
+
+	<link href="http://vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
+	<script src="http://vjs.zencdn.net/4.4/video.js"></script>
+</head>
+<body>
+	<video id="myElement" class="video-js vjs-default-skin"
+	controls preload="auto" width="640" height="264"
+	data-setup='{ "techOrder": ["flash"] }' >
+	<source src="http://d3gflyc7e9bpot.cloudfront.net/output6.mp4"
+	type='video/mp4' >
+</video>
+
+
+<video id="myElement2" class="video-js vjs-default-skin" controls
+preload="auto" data-setup='{ "techOrder": ["flash"] }'>
+<source src="rtmp://s1f29zvynq6sfw.cloudfront.net/cfx/st/&mp4:output6.mp4" type='rtmp/mp4'>
+</video>
+</body>
+</html>

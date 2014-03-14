@@ -29,7 +29,7 @@ public class WorkerServlet extends HttpServlet {
 		try {
 			ArrayList<Conversation> conList = retreiveConversations();
 			request.setAttribute("conversationList", conList);
-			request.getRequestDispatcher("index2.jsp")
+			request.getRequestDispatcher("index3.jsp")
 					.forward(request, response);
 
 			response.setStatus(200);

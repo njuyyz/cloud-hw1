@@ -1,4 +1,5 @@
 
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -49,17 +50,17 @@
 }
 
 div.upload {
-	width: 150px;
+	width: 200px;
 	height: 50px;
-	background: url(reply_false.png);
-	background-size: 150px 50px;
+	background: url(new_conversation_btn_false.png);
+	background-size: 200px 50px;
 	overflow: hidden;
 }
 
 div.upload input {
 	display: block !important;
-	width: 150px !important;
-	height: 50px !important;
+	width: 157px !important;
+	height: 57px !important;
 	opacity: 0 !important;
 	overflow: hidden !important;
 }
@@ -89,11 +90,11 @@ div.upload input {
   ================================================== -->
 <body>
 	<%
-		Conversation conversation = (Conversation) request
-			.getAttribute("conversation");
-			ArrayList<Video> videoList = conversation.getVideoList();
-			String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
-			String status = "";
+		String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
+		String status = "";
+		if (request.getAttribute("UploadStatus") != null) {
+			 status = (String) request.getAttribute("UploadStatus");
+		}
 	%>
 
 	<div class="navbar-wrapper">
@@ -137,6 +138,10 @@ div.upload input {
 		</ol>
 		<div class="carousel-inner">
 			<div class="item active">
+				<!-- 
+				<img
+					data-src="holder/holder.js/900x500/auto/#777:#7a7a7a/text:First slide"
+					alt="First slide"> -->
 				<div class="container">
 					<div class="carousel-caption">
 						<!-- write something here -->
@@ -176,16 +181,12 @@ div.upload input {
 
 	<div class="jumbotron">
 		<div class="container">
-			<form action="reply" method="post" enctype="multipart/form-data">
+			<form action="upload" method="post" enctype="multipart/form-data">
 				<div class="upload" id="dc">
 					<input type="file" capture="camera" id="cameraInput" name="upload"
 						disabled />
 				</div>
-				<input type="hidden" id="inputUserId" name="userId" value="" /> 
-				<input
-					type="hidden" name="conversation"
-					value="<%=conversation.getConversationId()%>" /> 
-					<input
+				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
 					type="submit" value="Upload" />
 			</form>
 
@@ -215,8 +216,8 @@ div.upload input {
 											document
 													.getElementById("cameraInput").disabled = false;
 											document.getElementById("dc").disabled = false;
-											document.getElementById("dc").style.background = "url(reply.png)";
-											document.getElementById("dc").style.backgroundSize = "150px 50px";
+											document.getElementById("dc").style.background = "url(new_conversation_btn.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
 											FB
 													.api(
 															'/me',
@@ -235,8 +236,8 @@ div.upload input {
 											document
 													.getElementById("cameraInput").disabled = true;
 											document.getElementById("dc").disabled = true;
-											document.getElementById("dc").style.background = "url(reply_false.png)";
-											document.getElementById("dc").style.backgroundSize = "150px 50px";
+											document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
 
 										} else {
 											// In this case, the person is not logged into Facebook, so we call the login() 
@@ -247,8 +248,8 @@ div.upload input {
 											document
 													.getElementById("cameraInput").disabled = true;
 											document.getElementById("dc").disabled = true;
-											document.getElementById("dc").style.background = "url(reply_false.png)";
-											document.getElementById("dc").style.backgroundSize = "150px 50px";
+											document.getElementById("dc").style.background = "url(new_conversation_btn_false.png)";
+											document.getElementById("dc").style.backgroundSize = "200px 50px";
 										}
 									});
 				};
@@ -269,21 +270,24 @@ div.upload input {
 			</script>
 			<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
 				data-show-faces="true" data-auto-logout-link="true"></div>
+			<div>
+				<h2>Subscribe</h2>
+				<form action="email" method="post">
+					email: <input type="text" name="email" /> <input type="submit"
+						value="Subscribe" class="btn btn-primary btn-lg" role="button" />
+				</form>
+			</div>
 		</div>
 	</div>
-
-	<!-- Marketing messaging and featurettes
-    ================================================== -->
-	<!-- Wrap the rest of the page in another container to center all the content. -->
-
-
 
 
 
 	<div class="container">
 		<%
-			for (int i = 0; i < videoList.size(); i++) {
-			Video video = videoList.get(i);
+			ArrayList<Conversation> conList = (ArrayList<Conversation>) request
+				.getAttribute("conversationList");
+			for (int i = 0; i < conList.size(); i++) {
+			Video video = conList.get(i).getVideoList().get(0);
 			String url = video.getUrl();
 			int dashIndex = url.lastIndexOf("/");
 			String httpUrl = httpStart+url.substring(dashIndex+1);
@@ -309,7 +313,15 @@ div.upload input {
 				</script>
 			</div>
 		</div>
-		<hr>
+		<div>
+			<form action="conversation">
+				<input name="conversationID" value="<%=conList.get(i).getConversationId()%>"
+					hidden=true> <input class="btn btn-primary btn-lg"
+					role="button" value="detail" type="submit">
+
+			</form>
+		</div>
+		<hr class="featurette-divider">
 		<!-- /container -->
 		<%
 			}
@@ -338,3 +350,7 @@ div.upload input {
 	<!-- <script src="../../assets/js/docs.min.js"></script> -->
 </body>
 </html>
+
+
+
+

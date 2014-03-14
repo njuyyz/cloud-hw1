@@ -64,8 +64,8 @@ div.upload input {
 	overflow: hidden !important;
 }
 </style>
-<link href="//vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
-<script src="//vjs.zencdn.net/4.4/video.js"></script>
+<link href="http://vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/4.4/video.js"></script>
 
 
 <title>Carousel Template for Bootstrap</title>
@@ -91,12 +91,9 @@ div.upload input {
 	<%
 		String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
 			String status = "";
-		if (request.getAttribute("UploadStatus") != null) {
+			if (request.getAttribute("UploadStatus") != null) {
 		 status = (String) request.getAttribute("UploadStatus");
-	%>
-	
-	<%
-		}
+			}
 	%>
 
 	<div class="navbar-wrapper">
@@ -273,20 +270,14 @@ div.upload input {
 			<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
 				data-show-faces="true" data-auto-logout-link="true"></div>
 			<div>
-			<h2> Subscribe </h2>
-			<form action="email" method="post">
-			email: <input type="text" name="email" />
-			<input type="submit" value="Subscribe"class="btn btn-primary btn-lg"
-					role="button" />
-			</form>
+				<h2>Subscribe</h2>
+				<form action="email" method="post">
+					email: <input type="text" name="email" /> <input type="submit"
+						value="Subscribe" class="btn btn-primary btn-lg" role="button" />
+				</form>
 			</div>
 		</div>
 	</div>
-
-	<!-- Marketing messaging and featurettes
-    ================================================== -->
-	<!-- Wrap the rest of the page in another container to center all the content. -->
-
 
 
 
@@ -342,8 +333,11 @@ div.upload input {
 
 							<%
 								String url0 = videoList.get(0).getUrl();
-																		int dashIndex = url0.lastIndexOf("/");
-																		String httpUrl0 = httpStart+url0.substring(dashIndex+1);
+								int dashIndex = url0.lastIndexOf("/");
+								String httpUrl0 = httpStart+url0.substring(dashIndex+1);
+								int dot = url0.lastIndexOf(".");
+								String type = url0.substring(dot+1);
+								String rtmpURL0 = url0.substring(0,dashIndex+1)+type+":"+url0.substring(dashIndex+1,dot);
 							%>
 							<div id="myElement<%=con.getConversationId()%>.0">Loading
 								the player...</div>
@@ -361,6 +355,14 @@ div.upload input {
 
 									});
 								</script>
+							<%-- <div> <%=rtmpURL0 %></div>
+							<video id="myElement<%=con.getConversationId()%>.0" class="video-js vjs-default-skin"
+								controls preload="auto" width="640" height="264"
+								poster="http://video-js.zencoder.com/oceans-clip.png"
+								data-setup='{"example_option":true}'>
+								<source src="<%=rtmpURL0 %>"
+									type='rtmp/<%=type %>' />
+							</video> --%>
 
 							<!-- </div> -->
 						</div>
@@ -368,9 +370,12 @@ div.upload input {
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
-																String videoUrl = videoList.get(j).getUrl();
-																int dashIndex1 = url0.lastIndexOf("/");
-																String httpUrl1 = httpStart+url0.substring(dashIndex+1);
+						String url = videoList.get(j).getUrl();
+						int dashIndex1 = url.lastIndexOf("/");
+						String httpUrl1 = httpStart+url.substring(dashIndex1+1);
+						int dot1 = url.lastIndexOf(".");
+						String type1 = url.substring(dot1+1);
+						String rtmpURL1 = url.substring(0,dashIndex1+1)+type1+":"+url.substring(dashIndex1+1,dot1);
 				%>
 				<div class="item">
 					<!-- 
@@ -396,15 +401,21 @@ div.upload input {
               jwplayer("myElement<%=con.getConversationId()%>.<%=j%>").setup({
             	  playlist: [{
 					sources: [{
-	                      file: "<%=videoUrl%>"
+	                      file: "<%=url%>"
 	                      },{
-	                   	  file: "<%=httpUrl1%>"
-												} ]
+	                   	  file: "<%=httpUrl1%>"} ]
 											} ],
 											primary : "flash"
 
 										});
-							</script>
+							</script> 
+							<%-- <video id="myElement<%=con.getConversationId()%>.<%=j %>" class="video-js vjs-default-skin"
+								controls preload="auto" width="640" height="264"
+								poster="http://video-js.zencoder.com/oceans-clip.png"
+								data-setup='{"example_option":true}'>
+								<source src="<%=rtmpURL1 %>"
+									type='rtmp/<%=type1 %>' />
+							</video> --%>
 							<!-- </div> -->
 						</div>
 					</div>
