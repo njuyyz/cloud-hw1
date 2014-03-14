@@ -83,9 +83,6 @@ public class ConnectDB {
 		}
 		System.out.println("Table created successfully");
 
-	}
-
-	public void email()	{
 		// email table
 		try {
 			statement
@@ -95,18 +92,28 @@ public class ConnectDB {
 			e.printStackTrace();
 		}
 		System.out.println("Email Table created successfully");
+
+	}
+
+	/**
+	 * insert email into RDS
+	 */
+	public void insertEmail(String email)	{
 		
 		// insert email tuple
 		// email String:
 		try {
-			statement.executeUpdate("insert into email values ('" + email + "')";
+			statement.executeUpdate("insert into email values ('" + email + "')");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
 
-	// return all the emails
+	/**
+	 * return all the emails
+	 * @return
+	 */
 	public ArrayList<String> getEmailList() {
 		ArrayList<String> array = new ArrayList<String>();
 
@@ -128,7 +135,6 @@ public class ConnectDB {
 			e.printStackTrace();
 		}
 		return array;
-
 	}
 
 	public void insert() {
