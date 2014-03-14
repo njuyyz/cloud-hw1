@@ -90,13 +90,11 @@ div.upload input {
 <body>
 	<%
 		String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
-		String status = "";
-			if (request.getAttribute("UploadStatus") != null) {
-			 status = (String) request.getAttribute("UploadStatus");
+			String status = "";
+		if (request.getAttribute("UploadStatus") != null) {
+		 status = (String) request.getAttribute("UploadStatus");
 	%>
-	<div id='message' style="display: none;">
-		<span><%=status%> </span>
-	</div>
+	
 	<%
 		}
 	%>
@@ -274,6 +272,14 @@ div.upload input {
 			</script>
 			<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
 				data-show-faces="true" data-auto-logout-link="true"></div>
+			<div>
+			<h2> Subscribe </h2>
+			<form action="email" method="post">
+			email: <input type="text" name="email" />
+			<input type="submit" value="Subscribe"class="btn btn-primary btn-lg"
+					role="button" />
+			</form>
+			</div>
 		</div>
 	</div>
 
@@ -287,12 +293,12 @@ div.upload input {
 
 	<%
 		ArrayList<Conversation> conList = (ArrayList<Conversation>) request
-			.getAttribute("conversationList");
+		.getAttribute("conversationList");
 	%>
 	<%
 		for (int i = 0; i < conList.size(); i++) {
-		Conversation con = conList.get(i);
-		ArrayList<Video> videoList = con.getVideoList();
+			Conversation con = conList.get(i);
+			ArrayList<Video> videoList = con.getVideoList();
 	%>
 	<div class="container marketing">
 
@@ -336,8 +342,8 @@ div.upload input {
 
 							<%
 								String url0 = videoList.get(0).getUrl();
-													int dashIndex = url0.lastIndexOf("/");
-													String httpUrl0 = httpStart+url0.substring(dashIndex+1);
+																		int dashIndex = url0.lastIndexOf("/");
+																		String httpUrl0 = httpStart+url0.substring(dashIndex+1);
 							%>
 							<div id="myElement<%=con.getConversationId()%>.0">Loading
 								the player...</div>
@@ -362,9 +368,9 @@ div.upload input {
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
-														String videoUrl = videoList.get(j).getUrl();
-														int dashIndex1 = url0.lastIndexOf("/");
-														String httpUrl1 = httpStart+url0.substring(dashIndex+1);
+																String videoUrl = videoList.get(j).getUrl();
+																int dashIndex1 = url0.lastIndexOf("/");
+																String httpUrl1 = httpStart+url0.substring(dashIndex+1);
 				%>
 				<div class="item">
 					<!-- 

@@ -1,3 +1,5 @@
+import helper.NotificationHelper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -73,11 +76,14 @@ public class UploadServlet extends HttpServlet {
 				
 				ConnectDB conDB = ConnectDB.getInstance();
 				conDB.addConversation(v);
+				
+				NotificationHelper nh = NotificationHelper.getInstance();
+				nh.publish();
 
 			}else{
 				request.setAttribute("UploadStatus", ""+items.size());
 			}
-			request.getRequestDispatcher("index.html").forward(request, response);
+			response.sendRedirect("index.html");
 
 		} catch (FileUploadException e) {
 			throw new ServletException("Cannot parse multipart request.", e);

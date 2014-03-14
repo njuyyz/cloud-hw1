@@ -23,9 +23,10 @@
 		<servlet-class>ReplyServlet</servlet-class>
 	</servlet>
 	
+	
 	<servlet>
-		<servlet-name>SNSServlet</servlet-name>
-		<servlet-class>SNSServlet</servlet-class>
+		<servlet-name>SubscribeServlet</servlet-name>
+		<servlet-class>SubscribeServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -46,7 +47,7 @@
 		<url-pattern>/reply</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>SNSServlet</servlet-name>
+		<servlet-name>SubscribeServlet</servlet-name>
 		<url-pattern>/email</url-pattern>
 	</servlet-mapping>
 </web-app>

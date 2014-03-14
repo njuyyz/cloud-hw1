@@ -299,6 +299,7 @@ div.upload input {
 			String httpUrl = httpStart+url.substring(dashIndex+1);
 		%>
 		<!-- Example row of columns -->
+		<div class="row">
 			<div class="col-md-4">
 				<h2><%=video.getVideoName()%></h2>
 				<div id="myElement<%=i%>">Loading the player...</div>
@@ -317,7 +318,7 @@ div.upload input {
 					});
 				</script>
 			</div>
-
+		</div>
 		<hr>
 		<!-- /container -->
 		<%
