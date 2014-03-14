@@ -9,7 +9,7 @@ public class Transcoder {
 	CreateJobRequest pipejob = new CreateJobRequest();
 	private static Transcoder instance = null;
 	
-	// 
+	// private constructor
 	private Transcoder()	{
 	}
 	
