@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.ConnectDB;
 import model.Conversation;
-import model.Video;
 /**
  * An example Amazon Elastic Beanstalk Worker Tier application. This example
  * requires a Java 7 (or higher) compiler.
@@ -21,28 +19,6 @@ public class WorkerServlet extends HttpServlet {
 
 	
 	private ArrayList<Conversation> retreiveConversations() {
-//		ArrayList<Conversation> list = new ArrayList<Conversation>();
-//		for (int i = 0; i < 7; i++) {
-//			Conversation c = new Conversation();
-//			c.setConversationId(i + 1l);
-//			
-//			ArrayList<Video> videoList = new ArrayList<Video>();
-//			Video v = new Video();
-//			v.setConversationId(1L);
-//			v.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
-//			v.setVideoName("My Video");
-//			Video v2 = new Video();
-//			v2.setConversationId(1L);
-//			v2.setUrl("http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4");
-//			v2.setVideoName("My Video");
-//			
-//
-//			videoList.add(v);
-//			videoList.add(v2);
-//			c.setVideoList(videoList);
-//			list.add(c);
-//		}
-
 		ConnectDB conDB = ConnectDB.getInstance();
 		return conDB.getAllConversations();
 	}
@@ -51,9 +27,6 @@ public class WorkerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			// response.getWriter().write("columbia university: yes");
-			// Signal to beanstalk that processing was successful so this work
-			// item should not be retried.
 			ArrayList<Conversation> conList = retreiveConversations();
 			request.setAttribute("conversationList", conList);
 			request.getRequestDispatcher("index2.jsp")
@@ -61,11 +34,6 @@ public class WorkerServlet extends HttpServlet {
 
 			response.setStatus(200);
 		} catch (RuntimeException exception) {
-
-			// Signal to beanstalk that something went wrong while processing
-			// the request. The work request will be retried several times in
-			// case the failure was transient (eg a temporary network issue
-			// when writing to Amazon S3).
 
 			response.setStatus(500);
 			try (PrintWriter writer = new PrintWriter(

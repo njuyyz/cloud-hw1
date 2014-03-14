@@ -16,6 +16,18 @@
 		<servlet-name>UploadServlet</servlet-name>
 		<servlet-class>UploadServlet</servlet-class>
 	</servlet>
+
+	<servlet>
+		<display-name>ReplyServlet</display-name>
+		<servlet-name>ReplyServlet</servlet-name>
+		<servlet-class>ReplyServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>SNSServlet</servlet-name>
+		<servlet-class>SNSServlet</servlet-class>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>WorkerServlet</servlet-name>
 		<url-pattern>/index.html</url-pattern>
@@ -23,10 +35,18 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ConversationServlet</servlet-name>
-		<url-pattern>/conversation</url-pattern>
+		<url-pattern>/conversation/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UploadServlet</servlet-name>
 		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ReplyServlet</servlet-name>
+		<url-pattern>/reply</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SNSServlet</servlet-name>
+		<url-pattern>/email</url-pattern>
 	</servlet-mapping>
 </web-app>

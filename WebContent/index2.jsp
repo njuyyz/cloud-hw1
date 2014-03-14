@@ -90,12 +90,12 @@ div.upload input {
 <body>
 	<%
 		String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
-			String status = "";
-		if (request.getAttribute("UploadStatus") != null) {
-		 status = (String) request.getAttribute("UploadStatus");
+		String status = "";
+			if (request.getAttribute("UploadStatus") != null) {
+			 status = (String) request.getAttribute("UploadStatus");
 	%>
 	<div id='message' style="display: none;">
-		<span><%=status%></span>
+		<span><%=status%> </span>
 	</div>
 	<%
 		}
@@ -287,12 +287,12 @@ div.upload input {
 
 	<%
 		ArrayList<Conversation> conList = (ArrayList<Conversation>) request
-		.getAttribute("conversationList");
+			.getAttribute("conversationList");
 	%>
 	<%
 		for (int i = 0; i < conList.size(); i++) {
-			Conversation con = conList.get(i);
-			ArrayList<Video> videoList = con.getVideoList();
+		Conversation con = conList.get(i);
+		ArrayList<Video> videoList = con.getVideoList();
 	%>
 	<div class="container marketing">
 
@@ -322,7 +322,7 @@ div.upload input {
 					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a"> -->
 					<div class="container">
 						<div class="carousel-caption">
-							<div class="col-md-7">
+							<%-- <div class="col-md-7">
 								<h2 class="featurette-heading">
 									<%=con.getConversationId()%>
 								</h2>
@@ -331,18 +331,18 @@ div.upload input {
 									<%=con.getConversationId()%>
 									Conversation.Please join my conversation topic
 								</p>
-							</div>
-							<div class="col-md-5">
+							</div> --%>
+							<!-- <div class="col-md-5"> -->
 
-								<%
-									String url0 = videoList.get(0).getUrl();
-															int dashIndex = url0.lastIndexOf("/");
-															String httpUrl0 = httpStart+url0.substring(dashIndex+1);
-								%>
-								<div id="myElement<%=con.getConversationId()%>.0">Loading
-									the player...</div>
+							<%
+								String url0 = videoList.get(0).getUrl();
+													int dashIndex = url0.lastIndexOf("/");
+													String httpUrl0 = httpStart+url0.substring(dashIndex+1);
+							%>
+							<div id="myElement<%=con.getConversationId()%>.0">Loading
+								the player...</div>
 
-								<script type="text/javascript">
+							<script type="text/javascript">
               jwplayer("myElement<%=con.getConversationId()%>.0").setup({
             	  playlist: [{
 					sources: [{
@@ -356,22 +356,22 @@ div.upload input {
 									});
 								</script>
 
-							</div>
+							<!-- </div> -->
 						</div>
 					</div>
 				</div>
 				<%
 					for (int j = 1; j < videoList.size(); j++) {
-								String videoUrl = videoList.get(j).getUrl();
-								int dashIndex1 = url0.lastIndexOf("/");
-								String httpUrl1 = httpStart+url0.substring(dashIndex+1);
+														String videoUrl = videoList.get(j).getUrl();
+														int dashIndex1 = url0.lastIndexOf("/");
+														String httpUrl1 = httpStart+url0.substring(dashIndex+1);
 				%>
 				<div class="item">
 					<!-- 
 					<img data-src="holder/holder.js/900x500/auto/#777:#7a7a7a"> -->
 					<div class="container">
 						<div class="carousel-caption">
-							<div class="col-md-7">
+							<%-- <div class="col-md-3">
 								<h2 class="featurette-heading">
 									<%=con.getConversationId()%>
 								</h2>
@@ -380,26 +380,26 @@ div.upload input {
 									<%=con.getConversationId()%>
 									Conversation.Please join my conversation topic
 								</p>
-							</div>
-							<div class="col-md-5">
+							</div> --%>
+							<!-- <div class="col-md-7"> -->
 
 
-								<div id="myElement<%=con.getConversationId()%>.<%=j%>">Loading
-									the player...</div>
-								<script type="text/javascript">
+							<div id="myElement<%=con.getConversationId()%>.<%=j%>">Loading
+								the player...</div>
+							<script type="text/javascript">
               jwplayer("myElement<%=con.getConversationId()%>.<%=j%>").setup({
             	  playlist: [{
 					sources: [{
 	                      file: "<%=videoUrl%>"
 	                      },{
 	                   	  file: "<%=httpUrl1%>"
-					}]
-            	  }],
-              primary: "flash"
+												} ]
+											} ],
+											primary : "flash"
 
-									});
-								</script>
-							</div>
+										});
+							</script>
+							<!-- </div> -->
 						</div>
 					</div>
 				</div>
@@ -415,11 +415,19 @@ div.upload input {
 				class="glyphicon glyphicon-chevron-right"></span></a>
 
 		</div>
+		<div>
+			<form action="conversation">
+				<input name="conversationID" value="<%=con.getConversationId()%>"
+					hidden=true> <input class="btn btn-primary btn-lg"
+					role="button" value="detail" type="submit">
+
+			</form>
+		</div>
 		<hr class="featurette-divider">
+		<%
+			}
+		%>
 	</div>
-	<%
-		}
-	%>
 	<!-- FOOTER -->
 	<footer>
 		<p class="pull-right">

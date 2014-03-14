@@ -1,59 +1,42 @@
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
+import model.ConnectDB;
+import model.Conversation;
 
 public class ConversationServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
-
-	/**
-	 * A client to use to access Amazon S3. Pulls credentials from the
-	 * {@code AwsCredentials.properties} file if found on the classpath,
-	 * otherwise will attempt to obtain credentials based on the IAM Instance
-	 * Profile associated with the EC2 instance on which it is run.
-	 */
-	private final AmazonS3Client s3 = new AmazonS3Client(
-			new AWSCredentialsProviderChain(
-					new InstanceProfileCredentialsProvider(),
-					new ClasspathPropertiesFileCredentialsProvider()));
-
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			//response.getWriter().write("university");
-			// Signal to beanstalk that processing was successful so this work
-			// item should not be retried.
-			request.getRequestDispatcher("Conversation.jsp").forward(request, response);
-			response.setStatus(200);
-		} catch (RuntimeException  exception) {
+//			long conversationId = Long.parseLong(request
+//					.getParameter("conversationID"));
+			long conversationId = 15;
+			ConnectDB condb = ConnectDB.getInstance();
+			Conversation conversation = condb.getConversation(conversationId);
 
-			// Signal to beanstalk that something went wrong while processing
-			// the request. The work request will be retried several times in
-			// case the failure was transient (eg a temporary network issue
-			// when writing to Amazon S3).
+			request.setAttribute("conversation", conversation);
+			request.getRequestDispatcher("Conversation.jsp").forward(request,
+					response);
+			response.setStatus(200);
+		} catch (RuntimeException exception) {
 
 			response.setStatus(500);
 			try (PrintWriter writer = new PrintWriter(
 					response.getOutputStream())) {
 				exception.printStackTrace(writer);
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -67,31 +50,7 @@ public class ConversationServlet extends HttpServlet {
 			final HttpServletResponse response) throws ServletException,
 			IOException {
 
-		try {
-
-			// Parse the work to be done from the POST request body.
-
-			// Simulate doing some work.
-
-			Thread.sleep(10 * 1000);
-			// Signal to beanstalk that processing was successful so this work
-			// item should not be retried.
-
-			response.setStatus(200);
-
-		} catch (RuntimeException | InterruptedException exception) {
-
-			// Signal to beanstalk that something went wrong while processing
-			// the request. The work request will be retried several times in
-			// case the failure was transient (eg a temporary network issue
-			// when writing to Amazon S3).
-
-			response.setStatus(500);
-			try (PrintWriter writer = new PrintWriter(
-					response.getOutputStream())) {
-				exception.printStackTrace(writer);
-			}
-		}
+		doGet(request,response);
 	}
 
 }

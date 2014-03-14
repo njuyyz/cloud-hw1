@@ -1,6 +1,12 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@ page import="model.Conversation"%>
+<%@ page import="model.Video"%>
+<%@ page import="java.util.ArrayList"%>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,15 +14,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-<title>Jumbotron Template for Bootstrap</title>
+<script type="text/javascript" src="jwplayer/jwplayer.js"></script>
+<script type="text/javascript">
+	document.createElement('video');
+	document.createElement('audio');
+	document.createElement('track');
+
+	$(document).ready(function() {
+		$("#message").fadeIn("slow");
+		$("#message").fadeOut("slow");
+	});
+</script>
+<style type="text/css">
+#message {
+	font-family: Arial, Helvetica, sans-serif;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 105;
+	text-align: center;
+	font-weight: bold;
+	font-size: 100%;
+	color: white;
+	padding: 10px 0px 10px 0px;
+	background-color: #AEB404;
+}
+
+#message span {
+	text-align: center;
+	width: 95%;
+	float: left;
+}
+
+div.upload {
+	width: 150px;
+	height: 50px;
+	background: url(reply_false.png);
+	background-size: 150px 50px;
+	overflow: hidden;
+}
+
+div.upload input {
+	display: block !important;
+	width: 150px !important;
+	height: 50px !important;
+	opacity: 0 !important;
+	overflow: hidden !important;
+}
+</style>
+<link href="//vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.4/video.js"></script>
+
+
+<title>Carousel Template for Bootstrap</title>
 
 <!-- Bootstrap core CSS -->
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Custom styles for this template -->
-<link href="jumbotron.css" rel="stylesheet">
 
 <!-- Just for debugging purposes. Don't actually copy this line! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -25,92 +80,262 @@
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+      <![endif]-->
+
+<!-- Custom styles for this template -->
+<link href="carousel.css" rel="stylesheet">
 </head>
-
+<!-- NAVBAR
+  ================================================== -->
 <body>
+	<%
+		Conversation conversation = (Conversation) request
+			.getAttribute("conversation");
+			ArrayList<Video> videoList = conversation.getVideoList();
+			String httpStart = "http://d3gflyc7e9bpot.cloudfront.net/";
+			String status = "";
+		if (request.getAttribute("UploadStatus") != null) {
+		 status = (String) request.getAttribute("UploadStatus");
+	%>
+	<div id='message' style="display: none;">
+		<span><%=status%> </span>
+	</div>
+	<%
+		}
+	%>
 
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="navbar-wrapper">
 		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Project name</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<form class="navbar-form navbar-right" role="form">
-					<div class="form-group">
-						<input type="text" placeholder="Email" class="form-control">
+
+			<div class="navbar navbar-inverse navbar-static-top"
+				role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">Twitt Tube</a>
 					</div>
-					<div class="form-group">
-						<input type="password" placeholder="Password" class="form-control">
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<li><a href="#about">About</a></li>
+						</ul>
 					</div>
-					<button type="submit" class="btn btn-success">Sign in</button>
-				</form>
+
+
+				</div>
 			</div>
-			<!--/.navbar-collapse -->
+
 		</div>
 	</div>
 
-	<!-- Main jumbotron for a primary marketing message or call to action -->
+
+
+	<!-- Carousel
+    ================================================== -->
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		<!-- Indicators -->
+		<ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>
+		</ol>
+		<div class="carousel-inner">
+			<div class="item active">
+				<!-- 
+				<img
+					data-src="holder/holder.js/900x500/auto/#777:#7a7a7a/text:First slide"
+					alt="First slide"> -->
+				<div class="container">
+					<div class="carousel-caption">
+						<!-- write something here -->
+						<h1 id="test">Welcome</h1>
+						<p>Welcome to Twitt-tube world. Start your lovely journey
+							here!</p>
+
+					</div>
+				</div>
+			</div>
+			<div class="item">
+				<!-- 
+				<img
+					data-src="holder/holder.js/900x500/auto/#666:#6a6a6a/text:Second slide"
+					alt="Second slide"> -->
+				<div class="container">
+					<div class="carousel-caption"></div>
+				</div>
+			</div>
+			<div class="item">
+				<!-- 
+				<img
+					data-src="holder/holder.js/900x500/auto/#555:#5a5a5a/text:Third slide"
+					alt="Third slide"> -->
+				<div class="container">
+					<div class="carousel-caption"></div>
+				</div>
+			</div>
+		</div>
+		<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span
+			class="glyphicon glyphicon-chevron-left"></span></a> <a
+			class="right carousel-control" href="#myCarousel" data-slide="next"><span
+			class="glyphicon glyphicon-chevron-right"></span></a>
+	</div>
+	<!-- /.carousel -->
+
+
 	<div class="jumbotron">
 		<div class="container">
-			<h1>Hello, world!</h1>
-			<p>This is a template for a simple marketing or informational
-				website. It includes a large callout called a jumbotron and three
-				supporting pieces of content. Use it as a starting point to create
-				something more unique.</p>
-			<p>
-				<a class="btn btn-primary btn-lg" role="button">Learn more
-					&raquo;</a>
-			</p>
+			<form action="reply" method="post" enctype="multipart/form-data">
+				<div class="upload" id="dc">
+					<input type="file" capture="camera" id="cameraInput" name="upload"
+						disabled />
+				</div>
+				<input type="hidden" id="inputUserId" name="userId" value="" /> <input
+					type="hidden" name="conversation"
+					value="<%=conversation.getConversationId()%>" /> <input
+					type="submit" value="Upload" />
+			</form>
+
+		</div>
+		<div class="container">
+			<div id="fb-root"></div>
+			<script>
+				window.fbAsyncInit = function() {
+					FB.init({
+						appId : 382097358596865,
+						status : true, // check login status
+						cookie : true, // enable cookies to allow the server to access the session
+						xfbml : true
+					// parse XFBML
+					});
+
+					// Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+					// for any authentication related change, such as login, logout or session refresh. This means that
+					// whenever someone who was previously logged out tries to log in again, the correct case below 
+					// will be handled. 
+					FB.Event
+							.subscribe(
+									'auth.authResponseChange',
+									function(response) {
+										// Here we specify what we do with the response anytime this event occurs. 
+										if (response.status === 'connected') {
+											document
+													.getElementById("cameraInput").disabled = false;
+											document.getElementById("dc").disabled = false;
+											document.getElementById("dc").style.background = "url(reply.png)";
+											document.getElementById("dc").style.backgroundSize = "150px 50px";
+											FB
+													.api(
+															'/me',
+															function(response1) {
+																document
+																		.getElementById('inputUserId').value = response1.id;
+															});
+										} else if (response.status === 'not_authorized') {
+											// In this case, the person is logged into Facebook, but not into the app, so we call
+											// FB.login() to prompt them to do so. 
+											// In real-life usage, you wouldn't want to immediately prompt someone to login 
+											// like this, for two reasons:
+											// (1) JavaScript created popup windows are blocked by most browsers unless they 
+											// result from direct interaction from people using the app (such as a mouse click)
+											// (2) it is a bad experience to be continually prompted to login upon page load.
+											document
+													.getElementById("cameraInput").disabled = true;
+											document.getElementById("dc").disabled = true;
+											document.getElementById("dc").style.background = "url(reply_false.png)";
+											document.getElementById("dc").style.backgroundSize = "150px 50px";
+
+										} else {
+											// In this case, the person is not logged into Facebook, so we call the login() 
+											// function to prompt them to do so. Note that at this stage there is no indication
+											// of whether they are logged into the app. If they aren't then they'll see the Login
+											// dialog right after they log in to Facebook. 
+											// The same caveats as above apply to the FB.login() call here.
+											document
+													.getElementById("cameraInput").disabled = true;
+											document.getElementById("dc").disabled = true;
+											document.getElementById("dc").style.background = "url(reply_false.png)";
+											document.getElementById("dc").style.backgroundSize = "150px 50px";
+										}
+									});
+				};
+
+				// Load the SDK asynchronously
+				(function(d) {
+					var js, id = 'facebook-jssdk', ref = d
+							.getElementsByTagName('script')[0];
+					if (d.getElementById(id)) {
+						return;
+					}
+					js = d.createElement('script');
+					js.id = id;
+					js.async = true;
+					js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=382097358596865";
+					ref.parentNode.insertBefore(js, ref);
+				}(document));
+			</script>
+			<div class="fb-login-button" data-max-rows="2" data-size="xlarge"
+				data-show-faces="true" data-auto-logout-link="true"></div>
 		</div>
 	</div>
+
+	<!-- Marketing messaging and featurettes
+    ================================================== -->
+	<!-- Wrap the rest of the page in another container to center all the content. -->
+
+
+
+
 
 	<div class="container">
+		<%
+			for (int i = 0; i < videoList.size(); i++) {
+			Video video = videoList.get(i);
+			String url = video.getUrl();
+			int dashIndex = url.lastIndexOf("/");
+			String httpUrl = httpStart+url.substring(dashIndex+1);
+		%>
 		<!-- Example row of columns -->
-		<div class="row">
 			<div class="col-md-4">
-				<h2>Video</h2>
-				<video width="320" height="240" controls> 
-				<source src="http://d3gflyc7e9bpot.cloudfront.net/sample_mpeg4.mp4" type="video/mp4">
-				</video>
+				<h2><%=video.getVideoName()%></h2>
+				<div id="myElement<%=i%>">Loading the player...</div>
+
+				<script type="text/javascript">
+              jwplayer("myElement<%=i%>").setup({
+            	  playlist: [{
+					sources: [{
+	                      file: "<%=url%>"
+	                      },{
+	                   	  file: "<%=httpUrl%>"
+							} ]
+						} ],
+						primary : "flash"
+
+					});
+				</script>
 			</div>
-			<div class="col-md-4">
-				<h2>Heading</h2>
-				<p>Donec id elit non mi porta gravida at eget metus. Fusce
-					dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-					ut fermentum massa justo sit amet risus. Etiam porta sem malesuada
-					magna mollis euismod. Donec sed odio dui.</p>
-				<p>
-					<a class="btn btn-default" href="#" role="button">View details
-						&raquo;</a>
-				</p>
-			</div>
-			<div class="col-md-4">
-				<h2>Heading</h2>
-				<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in,
-					egestas eget quam. Vestibulum id ligula porta felis euismod semper.
-					Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum
-					nibh, ut fermentum massa justo sit amet risus.</p>
-				<p>
-					<a class="btn btn-default" href="#" role="button">View details
-						&raquo;</a>
-				</p>
-			</div>
-		</div>
 
 		<hr>
-
-		<footer>
-		<p>&copy; Company 2014</p>
-		</footer>
+		<!-- /container -->
+		<%
+			}
+		%>
 	</div>
-	<!-- /container -->
+	<!-- FOOTER -->
+	<footer>
+		<p class="pull-right">
+			<a href="#">Back to top</a>
+		</p>
+		<p>
+			&copy; 2014 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a
+				href="#">Terms</a>
+		</p>
+	</footer>
+
+	<!-- /.container -->
 
 
 	<!-- Bootstrap core JavaScript
@@ -119,5 +344,6 @@
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<!-- <script src="../../assets/js/docs.min.js"></script> -->
 </body>
 </html>
