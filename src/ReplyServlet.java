@@ -1,4 +1,5 @@
 import helper.NotificationHelper;
+import helper.TransCoder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.elastictranscoder.AmazonElasticTranscoderClient;
+import com.amazonaws.services.elastictranscoder.model.CreateJobOutput;
+import com.amazonaws.services.elastictranscoder.model.CreateJobRequest;
+import com.amazonaws.services.elastictranscoder.model.JobInput;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -61,10 +66,50 @@ public class ReplyServlet extends HttpServlet {
 					is, new ObjectMetadata());
 			putObj.setCannedAcl(CannedAccessControlList.PublicRead);
 			s3.putObject(putObj);
+			
+//			TransCoder trans = TransCoder.getInstance();
+//			String finalFileName = trans.transcode(key);
+//			
+			
+
+			
+			JobInput myjob = new JobInput();
+			myjob.setAspectRatio("auto");
+			myjob.setContainer("auto");
+			myjob.setFrameRate("auto");
+			myjob.setInterlaced("auto");
+
+			// the input filename
+			myjob.setKey(key);
+			myjob.setResolution("auto");
+
+			CreateJobOutput jobout = new CreateJobOutput();
+
+			int indexDot = key.lastIndexOf(".");
+			
+			String outputFileName = key.substring(0,indexDot)+"_transcoded.mp4";
+			// output filename
+			jobout.setKey(outputFileName);
+			jobout.setPresetId("1351620000001-000060");
+			jobout.setRotate("0");
+			CreateJobRequest pipejob = new CreateJobRequest();
+			pipejob.setInput(myjob);
+			pipejob.setOutput(jobout);
+			pipejob.setPipelineId("1394256631754-cowxng");
+
+			AmazonElasticTranscoderClient transclient = new AmazonElasticTranscoderClient(
+					new PropertiesCredentials(
+							UploadServlet.class
+									.getResourceAsStream("AwsCredentials.properties")));
+
+			transclient.createJob(pipejob);
+			
+			
+			
 			request.setAttribute("UploadStatus", "before Video;  ");
 			Video v = new Video();
 			v.setUsername(userId);
-			v.setUrl(cloudFrontUrl + key);
+			v.setUrl(cloudFrontUrl + outputFileName);
 			v.setVideoName(items.get(0).getName());
 			v.setVideoTimestamp(System.currentTimeMillis());
 			v.setConversationId(conversationId);

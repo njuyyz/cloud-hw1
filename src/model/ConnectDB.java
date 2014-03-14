@@ -98,20 +98,22 @@ public class ConnectDB {
 	/**
 	 * insert email into RDS
 	 */
-	public void insertEmail(String email)	{
-		
+	public void insertEmail(String email) {
+
 		// insert email tuple
 		// email String:
 		try {
-			statement.executeUpdate("insert into email values ('" + email + "')");
+			statement.executeUpdate("insert into email values ('" + email
+					+ "')");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	/**
 	 * return all the emails
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getEmailList() {
@@ -344,7 +346,15 @@ public class ConnectDB {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		nextConversationId = 1 + arr.get(arr.size() - 1).getConversationId();
+
+		if (arr.size() != 0) {
+
+			nextConversationId = 1 + arr.get(arr.size() - 1)
+					.getConversationId();
+		} else {
+
+			nextConversationId = 1;
+		}
 		return arr;
 	}
 
@@ -384,8 +394,14 @@ public class ConnectDB {
 			e.printStackTrace();
 		}
 
-		nextConversationId = 1 + array.get(array.size() - 1)
-				.getConversationId();
+		if (array.size() != 0) {
+
+			nextConversationId = 1 + array.get(array.size() - 1)
+					.getConversationId();
+		} else {
+
+			nextConversationId = 1;
+		}
 
 		return array;
 	}

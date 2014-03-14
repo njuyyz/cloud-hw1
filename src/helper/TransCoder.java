@@ -1,21 +1,22 @@
+package helper;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.elastictranscoder.AmazonElasticTranscoderClient;
 import com.amazonaws.services.elastictranscoder.model.CreateJobOutput;
 import com.amazonaws.services.elastictranscoder.model.CreateJobRequest;
 import com.amazonaws.services.elastictranscoder.model.JobInput;
 
-public class Transcoder {
+public class TransCoder {
 
 	CreateJobRequest pipejob = new CreateJobRequest();
-	private static Transcoder instance = null;
+	private static TransCoder instance = null;
 	
 	// private constructor
-	private Transcoder()	{
+	private TransCoder()	{
 	}
 	
-	public static Transcoder getInstance()	{
+	public static TransCoder getInstance()	{
 		if(instance == null)
-			instance = new Transcoder();
+			instance = new TransCoder();
 		return instance;
 	}
 	
