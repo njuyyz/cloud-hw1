@@ -11,6 +11,7 @@ import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.GetTopicAttributesResult;
 import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.SubscribeResult;
 
@@ -32,7 +33,12 @@ public class SNSServlet extends HttpServlet {
 		AmazonSNSClient sns = new AmazonSNSClient(new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY));
 		
 		CreateTopicResult ctr = sns.createTopic("try");
+		
+		
+				
 		String arn = ctr.getTopicArn();
+		GetTopicAttributesResult s = sns.getTopicAttributes(arn);
+		
 		SubscribeResult scr = sns.subscribe(arn, "email", "allen3wsy@gmail.com");
 		PublishResult pr = sns.publish(arn, "testMsg");
 		response.getWriter().write("Success");
