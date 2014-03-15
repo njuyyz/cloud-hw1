@@ -17,8 +17,7 @@ Siyang Wu: sw2848
 URL
 ******************
 
-我們最後的URL（替換）
-http://cloudtube2-xjnwssfbsd.elasticbeanstalk.com/
+http://default-gkqpxppgak.elasticbeanstalk.com/
 
 ******************
 EXTRA POINT
