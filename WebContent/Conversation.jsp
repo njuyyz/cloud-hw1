@@ -281,6 +281,7 @@ div.upload input {
 
 
 	<div class="container">
+	<p> <%=videoList.size() %></p>
 		<%
 			for (int i = 0; i < videoList.size(); i++) {
 			Video video = videoList.get(i);

@@ -17,9 +17,9 @@ public class ConversationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		try {
-//			long conversationId = Long.parseLong(request
-//					.getParameter("conversationID"));
-			long conversationId = 15;
+			long conversationId = Long.parseLong(request
+					.getParameter("conversationID"));
+//			long conversationId = 15;
 			ConnectDB condb = ConnectDB.getInstance();
 			Conversation conversation = condb.getConversation(conversationId);
 
