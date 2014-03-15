@@ -39,6 +39,6 @@ public class NotificationHelper {
 	public void publish(){
 		CreateTopicResult ctr = sns.createTopic("try");
 		String arn = ctr.getTopicArn();
-		sns.publish(arn, "ha ha");
+		sns.publish(arn, "Someone has posted a new video to the website, please log in and see the updated video");
 	}
 }

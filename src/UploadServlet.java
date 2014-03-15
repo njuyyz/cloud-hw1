@@ -74,15 +74,13 @@ public class UploadServlet extends HttpServlet {
 				s3.putObject(putObj);
 				
 				
-				
-				
 //				TransCoder tc = TransCoder.getInstance();
 //				String finalFileName = tc.transcode(key);
 				
 				
 				
 				
-				
+//********************************************************	Transcoding
 				JobInput myjob = new JobInput();
 				myjob.setAspectRatio("auto");
 				myjob.setContainer("auto");
@@ -114,7 +112,7 @@ public class UploadServlet extends HttpServlet {
 
 				transclient.createJob(pipejob);
 				
-				
+//************************************************************************					
 				
 				
 				
